@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
+import Head from 'next/head'
 import { Nunito } from 'next/font/google'
 
 import '../../styles/globals.css'
-import Head from 'next/head'
 
 import Header from '@/components/Header/Header'
 

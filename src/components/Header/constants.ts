@@ -1,1 +1,10 @@
-export const navs = ['home', 'catalog']
+export const navs = [
+  {
+    title: 'home',
+    href: '/',
+  },
+  {
+    title: 'catalog',
+    href: '/catalog',
+  },
+]
