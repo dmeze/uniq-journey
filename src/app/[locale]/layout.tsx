@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Nunito } from 'next/font/google'
 
 import '../../styles/globals.css'
+import Head from 'next/head'
+
 import Header from '@/components/Header/Header'
 
-const inter = Inter({ subsets: ['latin'] })
+const nunito = Nunito({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Uniq Journey',
@@ -20,7 +22,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang={locale}>
-      <body className={inter.className} suppressHydrationWarning>
+      <Head>
+        <title>UNIQ JOURNEY</title>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <body className={nunito.className} suppressHydrationWarning>
         <Header />
         {children}
       </body>

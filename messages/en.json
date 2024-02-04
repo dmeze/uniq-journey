@@ -2,7 +2,9 @@
   "Home": {
     "title": "Home"
   },
-  "Utils": {
-    "title": "Uniq Journey"
+  "Header": {
+    "title": "Uniq Journey",
+    "home": "Home",
+    "catalog": "Catalog"
   }
 }
