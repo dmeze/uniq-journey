@@ -6,6 +6,8 @@ import '../../styles/globals.css'
 
 import Header from '@/components/Header/Header'
 
+import StoreProvider from './StoreProvider'
+
 const nunito = Nunito({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -27,10 +29,12 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <body className={nunito.className} suppressHydrationWarning>
-        <Header />
-        {children}
-      </body>
+      <StoreProvider>
+        <body className={nunito.className} suppressHydrationWarning>
+          <Header />
+          {children}
+        </body>
+      </StoreProvider>
     </html>
   )
 }
