@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      height: {
+        'screen-wo-header': 'calc(100vh - 64px)',
+      },
       colors: {
         'dark-green': '#074C51',
         'white-yellow': '#F6EBD9',

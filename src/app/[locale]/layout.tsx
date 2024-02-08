@@ -32,7 +32,7 @@ export default function RootLayout({
       <StoreProvider>
         <body className={nunito.className} suppressHydrationWarning>
           <Header />
-          {children}
+          <main className="h-screen-wo-header">{children}</main>
         </body>
       </StoreProvider>
     </html>
