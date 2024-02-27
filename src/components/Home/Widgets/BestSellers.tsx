@@ -12,25 +12,25 @@ const BestSellers = () => {
             title: 'Paris',
             description: 'Christmas Paris',
             imageUrl: '/chicago.jpg',
-            price: '100UAH',
+            price: 100,
           },
           {
             title: 'Paris',
             description: 'Christmas Paris',
             imageUrl: '/chicago.jpg',
-            price: '100UAH',
+            price: 100,
           },
           {
             title: 'Paris',
             description: 'Christmas Paris',
             imageUrl: '/chicago.jpg',
-            price: '100UAH',
+            price: 100,
           },
           {
             title: 'Paris',
             description: 'Christmas Paris',
             imageUrl: '/chicago.jpg',
-            price: '100UAH',
+            price: 100,
           },
         ]}
       />
