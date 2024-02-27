@@ -27,7 +27,7 @@ const initialState: PerfumesState = {
 export const fetchPerfumes = createAsyncThunk(
   'perfumes/fetchPerfumes',
   async () => {
-    const response = await fetch('http://0.0.0.0:3000/api/perfumes')
+    const response = await fetch('/api/perfumes')
     const data = await response.json()
     return data as Perfume[]
   },
