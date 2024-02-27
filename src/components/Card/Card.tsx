@@ -12,15 +12,14 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ imageUrl, title, description, price }) => {
   return (
-    <div className="mx-auto max-w-xs overflow-hidden rounded-lg bg-white shadow-md">
+    <div className="mx-5 my-2.5 overflow-hidden rounded-lg bg-white shadow-md">
       <div className="relative h-64">
         <Image
           src={imageUrl}
           alt={title}
-          layout="fill"
-          objectFit="cover"
-          objectPosition="center"
-          className="rounded-t-lg"
+          width={300}
+          height={300}
+          className="size-full rounded-t-lg object-cover object-center"
         />
       </div>
       <div className="px-6 py-4">
