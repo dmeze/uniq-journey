@@ -1,16 +1,23 @@
-import Card from '@/components/Card'
+'use client'
 
-const perfumes = [
-  {
-    id: 2,
-    imageUrl: '/chicago.jpg',
-    title: 'Perfume B',
-    description: 'An elegant, evening fragrance that captivates.',
-    price: '$75',
-  },
-]
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
+import Card from '@/components/Card'
+import type { AppDispatch } from '@/store'
+import {
+  fetchPerfumes,
+  selectPerfumes,
+} from '@/features/perfumes/perfumesSlice'
 
 const Catalog = () => {
+  const dispatch = useDispatch<AppDispatch>()
+  const perfumes = useSelector(selectPerfumes)
+
+  useEffect(() => {
+    dispatch(fetchPerfumes())
+  }, [dispatch])
+
   return (
     <div className="flex min-h-screen flex-col px-6 py-10 lg:px-16">
       <div className="mx-auto w-full">
@@ -33,8 +40,8 @@ const Catalog = () => {
               className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 2xl:w-1/4"
             >
               <Card
-                imageUrl={perfume.imageUrl}
-                title={perfume.title}
+                imageUrl={perfume.imageURLs[0]}
+                title={perfume.name}
                 description={perfume.description}
                 price={perfume.price}
               />
