@@ -1,12 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { useDispatch, useSelector, useStore } from 'react-redux'
 import type { TypedUseSelectorHook } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 
-export const makeStore = () => {
-  return configureStore({
-    reducer: {},
+import perfumesReducer from '@/features/perfumes/perfumesSlice'
+
+export const makeStore = () =>
+  configureStore({
+    reducer: {
+      perfumes: perfumesReducer,
+    },
   })
-}
 
 export type AppStore = ReturnType<typeof makeStore>
 export type RootState = ReturnType<AppStore['getState']>
