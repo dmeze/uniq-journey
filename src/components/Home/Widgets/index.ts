@@ -1,3 +1,3 @@
 import BestSellers from './BestSellers'
 
-export default { BestSellers }
+export { BestSellers }
