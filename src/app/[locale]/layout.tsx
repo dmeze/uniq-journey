@@ -2,10 +2,13 @@ import type { Metadata } from 'next'
 import Head from 'next/head'
 import { Nunito } from 'next/font/google'
 import { NextIntlClientProvider, useMessages } from 'next-intl'
+import type { ReactNode } from 'react'
 
 import Header from '@/components/Header/Header'
+import Cart from '@/containers/Cart/Cart'
 
 import StoreProvider from './StoreProvider'
+
 import '../../styles/globals.css'
 
 const nunito = Nunito({ subsets: ['latin'] })
@@ -19,10 +22,11 @@ export default function RootLayout({
   children,
   params: { locale },
 }: {
-  children: React.ReactNode
+  children: ReactNode
   params: { locale: string }
 }) {
   const messages = useMessages()
+
   return (
     <html lang={locale}>
       <Head>
@@ -34,6 +38,7 @@ export default function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <body className={nunito.className} suppressHydrationWarning>
             <Header />
+            <Cart />
             <main className="h-screen-wo-header">{children}</main>
           </body>
         </NextIntlClientProvider>
