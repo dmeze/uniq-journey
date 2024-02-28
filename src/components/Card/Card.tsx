@@ -13,6 +13,7 @@ const Card: React.FC<CardProps> = ({ imageUrl, title, description, price }) => {
     <div className="mx-5 my-2.5 overflow-hidden rounded-lg bg-white shadow-md">
       <div className="relative h-64">
         <Image
+          priority
           src={imageUrl}
           alt={title}
           width={300}

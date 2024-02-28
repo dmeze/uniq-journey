@@ -12,6 +12,7 @@ const config: Config = {
         'screen-wo-header': 'calc(100vh - 64px)',
       },
       colors: {
+        'medium-green': '#638889',
         'dark-green': '#074C51',
         'white-yellow': '#F6EBD9',
       },

@@ -16,13 +16,25 @@ export const Logo = () => (
 )
 
 export const Search = () => (
-  <svg width="20" height="20" viewBox="0 0 512 512" fill="#074C51">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 512 512"
+    fill="currentColor"
+    className="text-dark-green transition-colors duration-200 hover:text-medium-green"
+  >
     <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
   </svg>
 )
 
 export const User = () => (
-  <svg width="20" height="20" viewBox="0 0 512 512" fill="#074C51">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 512 512"
+    fill="currentColor"
+    className="text-dark-green transition-colors duration-200 hover:text-medium-green"
+  >
     <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
   </svg>
 )
@@ -32,8 +44,9 @@ export const Cart = () => (
     width="26"
     height="26"
     viewBox="0 0 24 24"
-    fill="#074C51"
-    stroke="#074C51"
+    fill="currentColor"
+    className="text-dark-green transition-colors duration-200 hover:text-medium-green"
+    stroke="currentColor"
   >
     <path d="M7.5 18C8.32843 18 9 18.6716 9 19.5C9 20.3284 8.32843 21 7.5 21C6.67157 21 6 20.3284 6 19.5C6 18.6716 6.67157 18 7.5 18Z" />
     <path d="M16.5 18.0001C17.3284 18.0001 18 18.6716 18 19.5001C18 20.3285 17.3284 21.0001 16.5 21.0001C15.6716 21.0001 15 20.3285 15 19.5001C15 18.6716 15.6716 18.0001 16.5 18.0001Z" />
