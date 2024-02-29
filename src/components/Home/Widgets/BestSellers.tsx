@@ -9,27 +9,31 @@ const BestSellers = () => {
       <Slider
         items={[
           {
-            title: 'Paris',
+            id: '1',
+            name: 'Paris',
             description: 'Christmas Paris',
-            imageUrl: '/chicago.jpg',
+            imageURLs: ['/chicago.jpg'],
             price: 100,
           },
           {
-            title: 'Paris',
+            id: '2',
+            name: 'Paris',
             description: 'Christmas Paris',
-            imageUrl: '/chicago.jpg',
+            imageURLs: ['/chicago.jpg'],
             price: 100,
           },
           {
-            title: 'Paris',
+            id: '3',
+            name: 'Paris',
             description: 'Christmas Paris',
-            imageUrl: '/chicago.jpg',
+            imageURLs: ['/chicago.jpg'],
             price: 100,
           },
           {
-            title: 'Paris',
+            id: '4',
+            name: 'Paris',
             description: 'Christmas Paris',
-            imageUrl: '/chicago.jpg',
+            imageURLs: ['/chicago.jpg'],
             price: 100,
           },
         ]}

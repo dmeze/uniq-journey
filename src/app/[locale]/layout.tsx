@@ -1,5 +1,5 @@
+import cx from 'classnames'
 import type { Metadata } from 'next'
-import Head from 'next/head'
 import { Nunito } from 'next/font/google'
 import { NextIntlClientProvider, useMessages } from 'next-intl'
 import type { ReactNode } from 'react'
@@ -29,14 +29,12 @@ export default function RootLayout({
 
   return (
     <html lang={locale}>
-      <Head>
-        <title>UNIQ JOURNEY</title>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
       <StoreProvider>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <body className={nunito.className} suppressHydrationWarning>
+          <body
+            className={cx(nunito.className, 'text-dark-green')}
+            suppressHydrationWarning
+          >
             <Header />
             <Cart />
             <main className="h-screen-wo-header">{children}</main>
