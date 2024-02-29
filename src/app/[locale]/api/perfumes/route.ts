@@ -1,10 +1,10 @@
-import { sql } from '@vercel/postgres'
+import prisma from '@/app/[locale]/api'
 
 export async function GET() {
   try {
-    const { rows } = await sql`SELECT * FROM perfumes;`
+    const perfumes = await prisma.perfume.findMany()
 
-    return Response.json(rows)
+    return Response.json(perfumes)
   } catch (e) {
     return Response.json(e)
   }

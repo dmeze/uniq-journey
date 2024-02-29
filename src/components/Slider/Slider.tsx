@@ -12,8 +12,9 @@ import 'slick-carousel/slick/slick.css'
 
 interface SliderProps {
   items: {
-    imageUrl: string
-    title: string
+    id: string
+    imageURLs: string[]
+    name: string
     description: string
     price: number
   }[]
@@ -59,7 +60,7 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
           ]}
         >
           {items.map((item) => (
-            <Fragment key={item.title}>
+            <Fragment key={item.id}>
               <Card {...item} />
             </Fragment>
           ))}

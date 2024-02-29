@@ -10,3 +10,7 @@ export async function create() {
     cookies().set('uuid', uuid, { expires: Date.now() + month })
   }
 }
+
+export async function get(name: string) {
+  return cookies().get(name)
+}

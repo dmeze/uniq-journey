@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import type { RootState } from '@/store'
 
-interface Perfume {
+export interface Perfume {
   id: string
   name: string
   price: number
