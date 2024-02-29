@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model Cart {
+  id       String     @id @db.Uuid
+  userId   String     @unique @db.Uuid
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  products CartItem[]
+  total    Int?
+  count    Int?
+}
+
+model CartItem {
+  id        String  @id @db.Uuid
+  cartId    String  @db.Uuid
+  perfumeId String  @db.Uuid
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  perfume   Perfume @relation(fields: [perfumeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  quantity  Int     @default(1)
+  price     Int
+  size      String
+
+  @@unique([cartId, perfumeId, size])
+}
+
+model Perfume {
+  id          String         @id @db.Uuid
+  name        String
+  description String
+  imageURLs   String[]
+  aromas      PerfumeAroma[]
+  Carts       CartItem[]
+  OrderItem   OrderItem[]
+}
+
+model User {
+  id       String  @id @db.Uuid
+  name     String?
+  lastName String?
+  address  String?
+  email    String?
+  carts    Cart[]
+  order    Order?
+}
+
+model Order {
+  id       String      @id @db.Uuid
+  userId   String      @unique @db.Uuid
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  total    Int
+  products OrderItem[]
+  status   String
+}
+
+model OrderItem {
+  orderId   String  @db.Uuid
+  perfumeId String  @db.Uuid
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  perfume   Perfume @relation(fields: [perfumeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  quantity  Int     @default(1)
+  price     Int
+  size      String
+
+  @@id([orderId, perfumeId])
+}
+
+model Aroma {
+  id          String         @id @db.Uuid
+  name        String
+  description String
+  perfumes    PerfumeAroma[]
+}
+
+model PerfumeAroma {
+  perfume   Perfume   @relation(fields: [perfumeId], references: [id])
+  aroma     Aroma     @relation(fields: [aromaId], references: [id])
+  noteType  AromaType
+  perfumeId String    @db.Uuid
+  aromaId   String    @db.Uuid
+
+  @@id([perfumeId, aromaId])
+}
+
+enum AromaType {
+  HIGH
+  MIDDLE
+  BASE
+}
