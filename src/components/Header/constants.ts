@@ -1,6 +1,7 @@
 export const HOME_PAGE = '/'
 export const CATALOG_PAGE = '/catalog'
 export const PROFILE_PAGE = '/profile'
+export const CONSTRUCTOR_PAGE = '/constructor'
 
 export const navs = [
   {
@@ -10,5 +11,9 @@ export const navs = [
   {
     title: 'catalog',
     href: CATALOG_PAGE,
+  },
+  {
+    title: 'constructor',
+    href: CONSTRUCTOR_PAGE,
   },
 ]

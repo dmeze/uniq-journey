@@ -5,6 +5,7 @@
   "Header": {
     "title": "Uniq Journey",
     "home": "Home",
-    "catalog": "Catalog"
+    "catalog": "Catalog",
+    "constructor": "Constructor"
   }
 }
