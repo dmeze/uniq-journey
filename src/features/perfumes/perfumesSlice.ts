@@ -1,5 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import axios from 'axios'
 
 import type { RootState } from '@/store'
 
@@ -27,8 +28,8 @@ const initialState: PerfumesState = {
 export const fetchPerfumes = createAsyncThunk(
   'perfumes/fetchPerfumes',
   async () => {
-    const response = await fetch('/api/perfumes')
-    const data = await response.json()
+    const { data } = await axios.get('/api/perfumes')
+
     return data as Perfume[]
   },
 )

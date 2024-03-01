@@ -2,6 +2,7 @@
 
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 
 import {
   clearCart,
@@ -10,12 +11,13 @@ import {
   selectIsCartPending,
   setIsCartOpened,
 } from '@/features/cart/cartSlice'
-import CartItem from '@/components/Cart'
 import type { AppDispatch } from '@/store'
 import PageLoader from '@/components/Loaders/PageLoader'
+import CartBody from '@/components/Cart/CartBody'
 
 const Cart = () => {
   const dispatch = useDispatch<AppDispatch>()
+  const { push } = useRouter()
   const isOpened = useSelector(selectIsCartOpened)
   const cartData = useSelector(selectCartData)
   const cartPending = useSelector(selectIsCartPending)
@@ -76,42 +78,17 @@ const Cart = () => {
               Close
             </button>
             <h2 className="text-lg font-semibold">Shopping Cart</h2>
-            <ul className="flex-1">
-              {cartData.products?.map((perfume) => (
-                <li key={perfume!.itemId} className="my-2">
-                  <CartItem
-                    cartId={cartData.id}
-                    product={perfume!}
-                    quantity={perfume.quantity}
-                  />
-                </li>
-              ))}
-            </ul>
-            <div className="p-4">
-              <div className="flex justify-between border-t border-gray-300 pt-4">
-                <span className="text-lg font-semibold">Total Items:</span>
-                <span className="text-lg font-semibold">{cartData.count}</span>
-              </div>
-              <div className="flex justify-between pt-2">
-                <span className="text-lg font-semibold">Total Price:</span>
-                <span className="text-lg font-semibold">₴{cartData.total}</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
+            <CartBody />
+            <div className="flex items-center justify-center space-x-2">
               <button
                 disabled={!cartData.count}
                 type="button"
                 onClick={handleClearCart}
                 className="
-                rounded-xl
-                border-2
-                border-dark-red
-                px-6
-                py-2
-                font-bold
-                text-dark-red
-                transition-all
-                duration-300
+                rounded-xl border-2 border-dark-red
+                px-6 py-2
+                font-bold text-dark-red
+                transition-all duration-300
                 hover:bg-dark-red hover:text-white
                 disabled:bg-dark-red disabled:text-white disabled:opacity-70
                 "
@@ -121,19 +98,15 @@ const Cart = () => {
               <button
                 disabled={!cartData.count}
                 type="button"
-                onClick={() => console.log('Submit Order')}
+                onClick={() => push('/checkout')}
                 className="
-                !ml-10
-                flex-1
-                rounded-xl
-                border-2
-                border-dark-green
-                bg-dark-green px-6 py-2
-                font-bold
-                text-white
-                transition-all
-                duration-300
-                hover:opacity-70 disabled:opacity-70
+                  !ml-10
+                  rounded-lg border-2 border-light-green
+                  bg-light-green
+                  px-6 py-2
+                  font-bold text-white
+                  transition duration-300 hover:-translate-y-1 hover:shadow-lg
+                  disabled:opacity-70
                 "
               >
                 Submit <span className="ml-2.5">&rarr;</span>
