@@ -1,10 +1,14 @@
+export const HOME_PAGE = '/'
+export const CATALOG_PAGE = '/catalog'
+export const PROFILE_PAGE = '/profile'
+
 export const navs = [
   {
     title: 'home',
-    href: '/',
+    href: HOME_PAGE,
   },
   {
     title: 'catalog',
-    href: '/catalog',
+    href: CATALOG_PAGE,
   },
 ]

@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Cart, Logo, Search, User } from '@/components/Icons/Icons'
-import { navs } from '@/components/Header/constants'
+import { navs, PROFILE_PAGE } from '@/components/Header/constants'
 import { create } from '@/app/[locale]/actions'
 import { setIsCartOpened } from '@/features/cart/cartSlice'
 
@@ -48,7 +48,9 @@ const Header = () => {
               <Search />
             </div>
             <div className="flex h-full w-10 cursor-pointer items-center justify-center">
-              <User />
+              <Link href={PROFILE_PAGE}>
+                <User />
+              </Link>
             </div>
             <button
               aria-label="Cart"
