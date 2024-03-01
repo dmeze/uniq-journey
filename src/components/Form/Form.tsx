@@ -1,14 +1,23 @@
 import React from 'react'
-import { Formik, Form as FormikForm, Field, ErrorMessage } from 'formik'
+import {
+  Formik,
+  Form as FormikForm,
+  Field,
+  ErrorMessage,
+  useFormikContext,
+} from 'formik'
 import * as Yup from 'yup'
+
+import Select from '@/components/Select'
 
 type FieldConfig = {
   name: string
   type: string
   placeholder?: string
   label: string
-  options?: Array<{ key: string; value: string }>
+  options?: Array<{ label: string; value: string }>
   validationSchema: Yup.AnySchema
+  dependsOn?: string
 }
 
 type FormProps = {
@@ -25,6 +34,29 @@ const generateValidationSchema = (fields: FieldConfig[]) => {
   return Yup.object().shape(schemaFields)
 }
 
+const CustomField: React.FC<{ fieldConfig: FieldConfig }> = ({
+  fieldConfig,
+}) => {
+  const { values } = useFormikContext<any>()
+
+  const isDisabled = fieldConfig.dependsOn && !values[fieldConfig.dependsOn]
+
+  if (fieldConfig.type === 'select') {
+    return <Select {...fieldConfig} />
+  }
+
+  return (
+    <Field
+      id={fieldConfig.name}
+      name={fieldConfig.name}
+      type={fieldConfig.type}
+      placeholder={fieldConfig.placeholder}
+      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:opacity-50 focus:ring focus:ring-indigo-500"
+      disabled={isDisabled}
+    />
+  )
+}
+
 const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
   const initialValues = fields.reduce((acc, field) => {
     acc[field.name] = ''
@@ -32,33 +64,6 @@ const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
   }, {} as any)
 
   const validationSchema = generateValidationSchema(fields)
-
-  const renderField = (field: FieldConfig) => {
-    if (field.type === 'select') {
-      return (
-        <Field
-          as="select"
-          name={field.name}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:opacity-50 focus:ring focus:ring-indigo-500"
-        >
-          {field.options?.map((option) => (
-            <option key={option.key} value={option.value}>
-              {option.key}
-            </option>
-          ))}
-        </Field>
-      )
-    }
-    return (
-      <Field
-        id={field.name}
-        name={field.name}
-        type={field.type}
-        placeholder={field.placeholder}
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:opacity-50 focus:ring focus:ring-indigo-500"
-      />
-    )
-  }
 
   return (
     <Formik
@@ -76,7 +81,7 @@ const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
               >
                 {field.label}
               </label>
-              {renderField(field)}
+              <CustomField fieldConfig={field} />
               <ErrorMessage
                 name={field.name}
                 component="div"

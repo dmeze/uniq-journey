@@ -27,10 +27,13 @@ const UserInformation = () => {
       </div>
       <section className="space-y-6 rounded-lg bg-white p-6">
         <h2 className="text-2xl font-semibold text-gray-800">
-          {activeTab === 'already' ? 'Please Login' : 'Sign Up'}
+          {activeTab === 'already' ? 'Already User' : 'New User'}
         </h2>
         {activeTab === 'new' ? (
-          <Form fields={signUpFields} onSubmit={() => {}} />
+          <Form
+            fields={signUpFields}
+            onSubmit={(values) => console.log(values)}
+          />
         ) : (
           <Form fields={signInFields} onSubmit={() => {}} />
         )}
