@@ -1,18 +1,13 @@
-import React, { useState } from 'react'
-import Image from 'next/image'
-import { useDispatch, useSelector } from 'react-redux'
-import { v4 } from 'uuid'
-import { isEmpty } from 'lodash'
+'use client'
 
-import {
-  addCartItem,
-  createCart,
-  selectCartData,
-  setIsCartOpened,
-} from '@/features/cart/cartSlice'
-import type { AppDispatch } from '@/store'
-import { get } from '@/app/[locale]/actions'
+import { useContext, useState } from 'react'
+import Image from 'next/image'
+import { useDispatch } from 'react-redux'
+
+import { setIsCartOpened } from '@/features/cart/cartSlice'
 import { priceBySize, sevenMl, sizeOptions } from '@/components/Card/constants'
+import { createOrAdd } from '@/app/actions/cart/actions'
+import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 
 interface CardProps {
   imageURLs: string[]
@@ -21,36 +16,21 @@ interface CardProps {
   id: string
 }
 
-const Card: React.FC<CardProps> = ({ imageURLs, name, description, id }) => {
-  const dispatch = useDispatch<AppDispatch>()
-  const cartData = useSelector(selectCartData)
+const Card = ({ imageURLs, name, description, id }: CardProps) => {
+  const dispatch = useDispatch()
   const [selectedSize, setSelectedSize] = useState(sevenMl)
+  const { startTransition } = useContext(PageLoaderContext)!
 
-  const handleAddToCart = async (event: React.MouseEvent<HTMLElement>) => {
-    event.preventDefault()
-    const uuid = v4()
-    const userIdCookie = await get('uuid')
-
-    if (isEmpty(cartData)) {
-      await dispatch(
-        createCart({
-          id: uuid,
-          userId: userIdCookie?.value as string,
-          count: 0,
-          total: 0,
-        }),
-      )
-    }
-
-    dispatch(
-      addCartItem({
-        cartId: cartData.id || uuid,
+  const handleAddToCart = () => {
+    startTransition(async () => {
+      await createOrAdd({
         perfumeId: id,
         size: selectedSize,
         price: priceBySize[selectedSize as keyof typeof priceBySize],
-      }),
-    )
-    dispatch(setIsCartOpened())
+      })
+
+      dispatch(setIsCartOpened())
+    })
   }
 
   return (

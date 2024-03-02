@@ -1,39 +1,43 @@
-import React from 'react'
+'use client'
+
 import Image from 'next/image'
-import { useDispatch } from 'react-redux'
+import { useTransition } from 'react'
 
 import type { CartItem as CartItemType } from '@/features/cart/cartSlice'
-import { addCartItem, removeCartItem } from '@/features/cart/cartSlice'
-import type { AppDispatch } from '@/store'
+import { addItemToCart, removeItemFromCart } from '@/app/actions/cart/actions'
+import ContentLoader from '@/components/Loaders/ContentLoader'
 
-interface CartItemProps {
+interface ICartItemProps {
   product: CartItemType
-  quantity: number
   cartId: string
 }
 
-const CartItem: React.FC<CartItemProps> = ({ product, quantity, cartId }) => {
-  const dispatch = useDispatch<AppDispatch>()
-  const handleIncrease = () => {
-    dispatch(
-      addCartItem({
+const CartItem = ({
+  product: { id, size, price, quantity, imageURLs, name },
+  cartId,
+}: ICartItemProps) => {
+  const [isPending, startTransition] = useTransition()
+
+  const handleIncrease = async () => {
+    startTransition(async () => {
+      await addItemToCart({
         cartId,
-        perfumeId: product.id,
-        size: product.size,
-        price: product.price,
-      }),
-    )
+        perfumeId: id,
+        size,
+        price,
+      })
+    })
   }
 
-  const handleDecrease = () => {
-    dispatch(
-      removeCartItem({
+  const handleDecrease = async () => {
+    startTransition(async () => {
+      await removeItemFromCart({
         cartId,
-        perfumeId: product.id,
-        size: product.size,
-        price: product.price,
-      }),
-    )
+        perfumeId: id,
+        size,
+        price,
+      })
+    })
   }
 
   return (
@@ -42,38 +46,42 @@ const CartItem: React.FC<CartItemProps> = ({ product, quantity, cartId }) => {
         <div className="size-16 flex-none">
           <Image
             priority
-            src={product.imageURLs[0]}
-            alt={product.name}
+            src={imageURLs[0]}
+            alt={name}
             width={64}
             height={64}
             className="size-full rounded-lg object-cover object-center"
           />
         </div>
         <div className="grow">
-          <h3 className="text-lg font-semibold">{product.name}</h3>
-          <p className="text-sm text-gray-500">{product.size}</p>
+          <h3 className="text-lg font-semibold">{name}</h3>
+          <p className="text-sm text-gray-500">{size}</p>
           <p className="text-xl font-semibold text-gray-500">
-            ₴{product.price * quantity}
+            ₴{price * quantity}
           </p>
         </div>
       </div>
-      <div className="flex items-center space-x-2">
-        <button
-          type="button"
-          onClick={handleDecrease}
-          className="rounded bg-gray-200 px-2 py-1 text-lg font-semibold hover:bg-gray-300"
-        >
-          -
-        </button>
-        <span className="text-lg font-semibold">{quantity}</span>
-        <button
-          type="button"
-          onClick={handleIncrease}
-          className="rounded bg-gray-200 px-2 py-1 text-lg font-semibold hover:bg-gray-300"
-        >
-          +
-        </button>
-      </div>
+      {isPending ? (
+        <ContentLoader />
+      ) : (
+        <div className="flex items-center space-x-2">
+          <button
+            type="button"
+            onClick={handleDecrease}
+            className="rounded bg-gray-200 px-2 py-1 text-lg font-semibold hover:bg-gray-300"
+          >
+            -
+          </button>
+          <span className="text-lg font-semibold">{quantity}</span>
+          <button
+            type="button"
+            onClick={handleIncrease}
+            className="rounded bg-gray-200 px-2 py-1 text-lg font-semibold hover:bg-gray-300"
+          >
+            +
+          </button>
+        </div>
+      )}
     </div>
   )
 }

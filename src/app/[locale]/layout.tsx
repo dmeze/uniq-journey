@@ -6,6 +6,7 @@ import type { ReactNode } from 'react'
 
 import Header from '@/components/Header/Header'
 import Cart from '@/containers/Cart/Cart'
+import PageLoaderProvider from '@/providers/PageLoaderProvider'
 
 import StoreProvider from './StoreProvider'
 
@@ -35,9 +36,11 @@ export default function RootLayout({
             className={cx(nunito.className, 'text-dark-green')}
             suppressHydrationWarning
           >
-            <Header />
-            <Cart />
-            <main className="h-screen-wo-header">{children}</main>
+            <PageLoaderProvider>
+              <Header />
+              <Cart />
+              <main className="h-screen-wo-header">{children}</main>
+            </PageLoaderProvider>
           </body>
         </NextIntlClientProvider>
       </StoreProvider>

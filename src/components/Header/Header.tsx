@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 
 import { Cart, Logo, Search, User } from '@/components/Icons/Icons'
 import { navs, PROFILE_PAGE } from '@/components/Header/constants'
-import { create } from '@/app/[locale]/actions'
+import { create } from '@/app/actions/actions'
 import { setIsCartOpened } from '@/features/cart/cartSlice'
 
 const Header = () => {
@@ -43,7 +43,7 @@ const Header = () => {
               {t('title')}
             </p>
           </div>
-          <div className="ml-20 flex h-full items-center space-x-1">
+          <div className="ml-72 flex h-full items-center space-x-1">
             <div className="flex h-full w-10 cursor-pointer items-center justify-center">
               <Search />
             </div>

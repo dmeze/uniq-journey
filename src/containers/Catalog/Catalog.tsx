@@ -1,46 +1,11 @@
-'use client'
-
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-
 import Card from '@/components/Card'
-import type { AppDispatch } from '@/store'
-import {
-  fetchPerfumes,
-  selectIsPerfumesPending,
-  selectPerfumes,
-} from '@/features/perfumes/perfumesSlice'
-import { get } from '@/app/[locale]/actions'
-import {
-  fetchCart,
-  selectIsCartOpened,
-  selectIsCartPending,
-} from '@/features/cart/cartSlice'
-import PageLoader from '@/components/Loaders/PageLoader'
+import { getPerfumes } from '@/app/actions/perfume/actions'
 
-const Catalog = () => {
-  const dispatch = useDispatch<AppDispatch>()
-  const perfumes = useSelector(selectPerfumes)
-  const perfumesPending = useSelector(selectIsPerfumesPending)
-  const cartPending = useSelector(selectIsCartPending)
-  const isCartOpened = useSelector(selectIsCartOpened)
-
-  useEffect(() => {
-    const getCart = async () => {
-      const userIdCookie = await get('uuid')
-
-      await dispatch(fetchCart(userIdCookie?.value as string))
-    }
-
-    dispatch(fetchPerfumes())
-    getCart()
-  }, [dispatch])
+const Catalog = async () => {
+  const perfumes = await getPerfumes()
 
   return (
     <div className="flex flex-col px-6 py-10 lg:px-16">
-      {(cartPending || perfumesPending) && !isCartOpened && (
-        <PageLoader size="100px" />
-      )}
       <div className="mx-auto w-full">
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Perfume Catalog</h1>
