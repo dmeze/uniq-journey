@@ -3,12 +3,12 @@
 import Image from 'next/image'
 import { useTransition } from 'react'
 
-import type { CartItem as CartItemType } from '@/features/cart/cartSlice'
 import { addItemToCart, removeItemFromCart } from '@/app/actions/cart/actions'
 import ContentLoader from '@/components/Loaders/ContentLoader'
+import type { PerfumeAromaType } from '@/components/Cart/cart'
 
 interface ICartItemProps {
-  product: CartItemType
+  product: PerfumeAromaType
   cartId: string
 }
 
@@ -22,7 +22,7 @@ const CartItem = ({
     startTransition(async () => {
       await addItemToCart({
         cartId,
-        perfumeId: id,
+        perfumeId: id!,
         size,
         price,
       })
@@ -33,7 +33,7 @@ const CartItem = ({
     startTransition(async () => {
       await removeItemFromCart({
         cartId,
-        perfumeId: id,
+        perfumeId: id!,
         size,
         price,
       })

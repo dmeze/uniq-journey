@@ -6,6 +6,9 @@ export interface PerfumeAromaType {
   description: string
   imageURLs: string[]
   aroma?: PerfumeAroma
+  size: string
+  quantity: number
+  price: number
 }
 
 export interface CartData {
