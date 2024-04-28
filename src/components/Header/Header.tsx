@@ -30,7 +30,7 @@ const Header = () => {
             {navs.map(({ title, href }) => (
               <Link
                 href={href}
-                className="px-3 py-2 text-xl font-black uppercase text-dark-green duration-200 hover:text-medium-green"
+                className="px-3 py-2 text-xl font-black uppercase text-dark-green duration-200 hover:text-light-green-200"
                 key={title}
               >
                 {t(title)}

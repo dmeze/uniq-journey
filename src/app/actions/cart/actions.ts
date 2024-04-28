@@ -9,6 +9,13 @@ import prisma from '@/app/actions'
 export const getCart = async () => {
   const userIdCookie = cookies().get('uuid')
 
+  if (!userIdCookie) {
+    return {
+      id: '',
+      count: 0,
+    }
+  }
+
   return prisma.cart
     .findUnique({
       where: {

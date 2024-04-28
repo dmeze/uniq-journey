@@ -100,7 +100,10 @@ const CartWrapper = ({
               <button
                 disabled={!cartCount}
                 type="button"
-                onClick={() => push('/checkout')}
+                onClick={() => {
+                  push('/checkout')
+                  dispatch(setIsCartOpened())
+                }}
                 className="
                   !ml-10
                   rounded-lg border-2 border-light-green

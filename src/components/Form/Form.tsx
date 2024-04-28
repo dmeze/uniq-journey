@@ -1,111 +1,64 @@
-import React from 'react'
-import {
-  Formik,
-  Form as FormikForm,
-  Field,
-  ErrorMessage,
-  useFormikContext,
-} from 'formik'
-import * as Yup from 'yup'
+import type { IFormProps } from '@/components/Form/FormTypes'
 
-import Select from '@/components/Select'
-
-type FieldConfig = {
-  name: string
-  type: string
-  placeholder?: string
-  label: string
-  options?: Array<{ label: string; value: string }>
-  validationSchema: Yup.AnySchema
-  dependsOn?: string
-}
-
-type FormProps = {
-  fields: FieldConfig[]
-  onSubmit: (values: any) => void
-}
-
-const generateValidationSchema = (fields: FieldConfig[]) => {
-  const schemaFields = fields.reduce((acc, field) => {
-    acc[field.name] = field.validationSchema
-    return acc
-  }, {} as any)
-
-  return Yup.object().shape(schemaFields)
-}
-
-const CustomField: React.FC<{ fieldConfig: FieldConfig }> = ({
-  fieldConfig,
-}) => {
-  const { values } = useFormikContext<any>()
-
-  const isDisabled = fieldConfig.dependsOn && !values[fieldConfig.dependsOn]
-
-  if (fieldConfig.type === 'select') {
-    return <Select {...fieldConfig} />
+const Form = ({ action, fields, submitText }: IFormProps) => {
+  const handleSubmit = async (formData: FormData) => {
+    action(formData)
   }
 
   return (
-    <Field
-      id={fieldConfig.name}
-      name={fieldConfig.name}
-      type={fieldConfig.type}
-      placeholder={fieldConfig.placeholder}
-      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:opacity-50 focus:ring focus:ring-indigo-500"
-      disabled={isDisabled}
-    />
-  )
-}
-
-const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
-  const initialValues = fields.reduce((acc, field) => {
-    acc[field.name] = ''
-    return acc
-  }, {} as any)
-
-  const validationSchema = generateValidationSchema(fields)
-
-  return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
-      {() => (
-        <FormikForm className="space-y-4">
-          {fields.map((field) => (
-            <div key={field.name} className="flex flex-col">
-              <label
-                htmlFor={field.name}
-                className="block text-sm font-medium text-gray-700"
-              >
-                {field.label}
-              </label>
-              <CustomField fieldConfig={field} />
-              <ErrorMessage
-                name={field.name}
-                component="div"
-                className="mt-2 text-sm text-red-600"
-              />
-            </div>
-          ))}
-          <button
-            type="submit"
+    <form className="mx-auto max-w-lg" action={handleSubmit}>
+      {fields.map(({ type, id, label }) => (
+        <div className="group relative mb-6 w-full" key={id}>
+          <input
             className="
-            flex w-full justify-center
-            rounded-md border border-transparent
-            bg-light-green
-            px-4 py-2
-            text-sm font-medium text-white shadow-sm
-            transition duration-300
-            hover:-translate-y-1 hover:shadow-lg
-             focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              peer block w-full
+              appearance-none
+              rounded-none border-0 border-b-2
+              border-light-green-600
+              bg-transparent px-0
+              py-3
+              text-sm text-dark-green-600
+              outline-none
+              ring-0
+              duration-300 hover:border-dark-green-600
+              focus:border-dark-green-600
+            "
+            id={id}
+            type={type}
+            name={id}
+            placeholder=""
+            required
+          />
+          <label
+            className="
+               absolute top-3 origin-[0]
+               -translate-y-6 scale-75 text-sm font-bold
+               text-light-green-100 duration-300
+               peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100
+               peer-hover:border-dark-green-600 peer-hover:text-dark-green-600 peer-focus:start-0
+               peer-focus:-translate-y-6 peer-focus:scale-75
+               peer-focus:text-dark-green-600
+             "
+            htmlFor={id}
           >
-            Submit
-          </button>
-        </FormikForm>
-      )}
-    </Formik>
+            {label}
+          </label>
+        </div>
+      ))}
+      <button
+        className="
+          mt-4 w-full
+          rounded bg-dark-green-300
+          px-4 py-2 font-bold text-white
+          transition
+          duration-300 ease-in-out
+          hover:bg-dark-green-600 focus:outline-none
+          "
+        type="submit"
+      >
+        {submitText}
+      </button>
+    </form>
   )
 }
 

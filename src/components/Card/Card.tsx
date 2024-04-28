@@ -58,8 +58,8 @@ const Card = ({ imageURLs, name, description, id }: CardProps) => {
             className={`mb-2 mr-2 rounded-lg px-3 py-1 text-sm font-medium transition-all duration-300 ease-in-out
         ${
           selectedSize === option
-            ? 'bg-green-600 text-white shadow-md'
-            : 'bg-gray-100 text-gray-700 hover:bg-green-200 hover:text-green-700'
+            ? 'bg-light-green-100 text-white shadow-md'
+            : 'bg-gray-100 text-gray-700 hover:bg-light-green-700 hover:text-light-green-300'
         }
         `}
           >
