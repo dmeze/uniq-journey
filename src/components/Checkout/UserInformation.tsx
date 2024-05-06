@@ -50,9 +50,6 @@ const UserInformation = () => {
         />
       </div>
       <section className="space-y-6 rounded-lg bg-white p-6">
-        <h2 className="text-2xl font-semibold text-dark-green-200">
-          {activeTab === 'already' ? 'Already User' : 'New User'}
-        </h2>
         <FormSteps />
       </section>
     </section>

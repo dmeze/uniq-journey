@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import Select from '@/components/Select/ActionSelect'
 import { getCityRef, getWarehouseOptions } from '@/components/Checkout/helpers'
 
-const NovaPostSelect = () => {
+const NovaPostSelect = ({ handleSubmit }: { handleSubmit: () => void }) => {
   const [cityRef, setCityRef] = useState('')
   const [warehouse, setWarehouse] = useState('')
 
@@ -39,6 +39,7 @@ const NovaPostSelect = () => {
           ease-in-out hover:bg-dark-green-600 focus:opacity-50 focus:outline-none focus:ring-2
           focus:ring-dark-green-500"
         type="submit"
+        onClick={handleSubmit}
       >
         Submit
       </button>
