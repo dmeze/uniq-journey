@@ -98,7 +98,8 @@
           "error",
           { "argsIgnorePattern": "^_" }
         ],
-        "import/no-extraneous-dependencies": "off"
+        "import/no-extraneous-dependencies": "off",
+        "tailwindcss/no-custom-classname": "off"
       }
     }
   ]
