@@ -8,8 +8,8 @@ const Form = ({ action, fields, submitText }: IFormProps) => {
 
   return (
     <form className="mx-auto max-w-lg" action={handleSubmit}>
-      {fields.map(({ type, id, label }) => (
-        <Input key={id} id={id} type={type} label={label} />
+      {fields.map(({ type, id, label, ...rest }) => (
+        <Input key={id} id={id} type={type} label={label} {...rest} />
       ))}
       <button
         className="
