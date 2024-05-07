@@ -2,15 +2,17 @@ const Input = ({
   id,
   type,
   label,
-  key,
+  pattern,
+  title,
 }: {
   id: string
   type: string
   label: string
-  key?: string
+  pattern?: string
+  title?: string
 }) => {
   return (
-    <div className="group relative mb-6 w-full" key={key}>
+    <div className="group relative mb-6 w-full" key={id}>
       <input
         className="
               peer block w-full
@@ -28,6 +30,8 @@ const Input = ({
         id={id}
         type={type}
         name={id}
+        pattern={pattern}
+        title={title}
         placeholder=""
         required
       />

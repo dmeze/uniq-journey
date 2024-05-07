@@ -42,11 +42,13 @@ model Perfume {
 model User {
   id       String  @id @db.Uuid
   name     String?
-  lastName String?
-  address  String?
+  phone    String?
   email    String?
+  city  String?
+  warehouse  String?
+  password  String?
   carts    Cart[]
-  order    Order?
+  orders    Order[]
 }
 
 model Order {

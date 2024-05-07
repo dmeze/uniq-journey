@@ -4,18 +4,24 @@ import { signUpFields } from '@/components/Checkout/constants'
 import Form from '@/components/Form'
 import NovaPostSelect from '@/components/Checkout/NovaPostSelect'
 import StripeCheckout from '@/components/Checkout/Stripe/StripeCheckout'
+import type { UserInformationData } from '@/app/actions/user/actions'
+import { updateUser } from '@/app/actions/user/actions'
 
 const FormSteps = () => {
   const [step, setStep] = useState(0)
 
-  const handleSubmitInfo = (formData: FormData) => {
-    console.log(formData)
+  const handleSubmitInfo = async (formData: FormData) => {
+    const { success } = await updateUser(
+      Object.fromEntries(formData) as unknown as UserInformationData,
+    )
 
-    setStep(1)
+    if (success) setStep(1) // TODO: Add error handling
   }
 
-  const handleSubmitAddress = () => {
-    setStep(2)
+  const handleSubmitAddress = async (city: string, warehouse: string) => {
+    const { success } = await updateUser({ city, warehouse })
+
+    if (success) setStep(2) // TODO: Add error handling
   }
 
   const steps = [
