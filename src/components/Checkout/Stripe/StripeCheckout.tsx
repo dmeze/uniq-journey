@@ -81,7 +81,7 @@ const CheckoutForm = () => {
             return_url: 'http://0.0.0.0:3000/checkout',
             payment_method_data: {
               billing_details: {
-                name: 'CHANGE ME',
+                name: 'Test Name',
               },
             },
           },
@@ -102,8 +102,12 @@ const CheckoutForm = () => {
 
   return (
     <>
-      <form className="mx-auto max-w-lg" onSubmit={handleSubmit}>
-        <PaymentElement />
+      <form
+        id="payment-form"
+        className="mx-auto max-w-lg"
+        onSubmit={handleSubmit}
+      >
+        <PaymentElement id="payment-element" options={{ layout: 'tabs' }} />
         <button
           className="
           mt-6 w-full

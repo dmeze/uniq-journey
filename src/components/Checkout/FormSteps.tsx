@@ -97,7 +97,7 @@ const FormSteps = ({ user }: { user: User }) => {
                 onClick={() => setStep(step - 1)}
                 className="mb-4 bg-none px-4 py-2 font-bold text-dark-green-100 transition duration-300 hover:text-dark-green-700"
               >
-                <span className="relative bottom-[1px] mr-2.5">&larr;</span>
+                <span className="relative bottom-px mr-2.5">&larr;</span>
                 Back to User Info
               </button>
             )}
