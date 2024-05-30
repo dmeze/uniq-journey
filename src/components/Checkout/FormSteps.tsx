@@ -14,7 +14,7 @@ import type {
 import { loginUser, updateUser } from '@/app/actions/user/actions'
 import UserInformationTabs from '@/components/Checkout/UserInformationTabs'
 
-const FormSteps = ({ user }: { user: User }) => {
+const FormSteps = ({ user, cartTotal }: { user: User; cartTotal: number }) => {
   const isUserLoggedIn = !!user?.name
   const [step, setStep] = useState(isUserLoggedIn ? 1 : 0)
   const [activeTab, setActiveTab] = useState('new')
@@ -70,7 +70,7 @@ const FormSteps = ({ user }: { user: User }) => {
     {
       id: 2,
       showBackButton: true,
-      view: <StripeCheckout />,
+      view: <StripeCheckout cartTotal={cartTotal} userName={user.name!} />,
     },
   ]
 

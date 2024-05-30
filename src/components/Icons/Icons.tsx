@@ -69,3 +69,31 @@ export const ArrowLeft = () => (
     <path stroke="#074C51" strokeWidth="2" d="M5 12H19M5 12L11 6M5 12L11 18" />
   </svg>
 )
+
+export const Success = () => (
+  <svg
+    className="size-8 text-white"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+  </svg>
+)
+
+export const Error = () => (
+  <svg
+    className="size-8 text-white"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <line x1="15" y1="9" x2="9" y2="15" />
+    <line x1="9" y1="9" x2="15" y2="15" />
+  </svg>
+)
