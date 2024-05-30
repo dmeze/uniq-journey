@@ -102,7 +102,7 @@ const CheckoutForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form className="mx-auto max-w-lg" onSubmit={handleSubmit}>
         <PaymentElement />
         <button
           className="

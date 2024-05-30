@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import bcrypt from 'bcrypt'
 
 import prisma from '@/app/actions'
+import { migrateCart } from '@/app/actions/cart/actions'
 
 export interface UserInformationData {
   name: string
@@ -18,12 +19,53 @@ export interface UserMailData {
   warehouse: string
 }
 
-export const getUserById = async (userId: string) => {
+export interface UserLoginData {
+  email: string
+  password: string
+}
+
+export const getCurrentUser = async () => {
+  const userIdCookie = cookies().get('uuid')
+
+  if (!userIdCookie?.value) {
+    return { error: 'No user Id!' }
+  }
+
   return prisma.user.findUnique({
     where: {
-      id: userId,
+      id: userIdCookie.value,
     },
   })
+}
+
+export const loginUser = async (loginData: UserLoginData) => {
+  try {
+    const userIdCookie = cookies().get('uuid')
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: loginData.email,
+      },
+    })
+
+    if (user?.password) {
+      const result = await bcrypt.compare(loginData.password, user.password)
+
+      if (result) {
+        const month = 30 * 24 * 60 * 60 * 1000
+        cookies().set('uuid', user.id, { expires: Date.now() + month })
+        await migrateCart(userIdCookie?.value!, user.id)
+
+        revalidatePath('/')
+        return { success: true }
+      }
+    }
+
+    return { success: false }
+  } catch (e) {
+    revalidatePath('/')
+    return { success: false }
+  }
 }
 
 export const updateUser = async (data: UserInformationData | UserMailData) => {

@@ -218,3 +218,44 @@ export const createOrAdd = async (data: {
   revalidatePath('/')
   return { success: true }
 }
+
+export const migrateCart = async (prevUserId: string, newUserId: string) => {
+  try {
+    const prevCart = await prisma.cart.findUnique({
+      where: {
+        userId: prevUserId,
+      },
+    })
+
+    if (!prevCart) {
+      return { success: false, message: 'Previous cart not found' }
+    }
+
+    const existingCart = await prisma.cart.findUnique({
+      where: {
+        userId: newUserId,
+      },
+    })
+
+    if (existingCart) {
+      await prisma.cart.delete({
+        where: {
+          userId: newUserId,
+        },
+      })
+    }
+
+    await prisma.cart.update({
+      where: {
+        userId: prevUserId,
+      },
+      data: {
+        userId: newUserId,
+      },
+    })
+
+    return { success: true }
+  } catch (e) {
+    return { success: false, message: 'Error migrating cart' }
+  }
+}

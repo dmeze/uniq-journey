@@ -18,3 +18,15 @@ export const signUpFields = [
       'Password must be at least 8 characters long and include at least one number, one uppercase and one lowercase letter.',
   },
 ]
+
+export const signInFields = [
+  { id: 'email', type: 'email', label: 'Email' },
+  {
+    id: 'password',
+    type: 'password',
+    label: 'Password',
+    pattern: '(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}',
+    title:
+      'Password must be at least 8 characters long and include at least one number, one uppercase and one lowercase letter.',
+  },
+]
