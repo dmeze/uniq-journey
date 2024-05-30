@@ -13,22 +13,26 @@ const ActionSelect = ({
   setSelectedValue,
   fetchOptions,
   refreshValue,
+  defaultValue,
 }: {
   id: string
   label: string
   setSelectedValue: (value: IOption) => void
   fetchOptions: (value: string) => Promise<IOption[]>
   refreshValue?: string
+  defaultValue: string | null
 }) => {
-  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useState<string>(defaultValue || '')
   const [isOpen, setIsOpen] = useState(false)
   const [options, setOptions] = useState<IOption[] | null>(null)
 
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setSearchTerm('')
-    setOptions(null)
+    if (refreshValue) {
+      setSearchTerm('')
+      setOptions(null)
+    }
   }, [refreshValue])
 
   const handleInputChange = async (event: ChangeEvent<HTMLInputElement>) => {

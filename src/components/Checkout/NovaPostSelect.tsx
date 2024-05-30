@@ -4,30 +4,36 @@ import Select from '@/components/Select/ActionSelect'
 import { getCityRef, getWarehouseOptions } from '@/components/Checkout/helpers'
 
 const NovaPostSelect = ({
+  cityLabel,
+  warehouseLabel,
   handleSubmit,
 }: {
+  cityLabel: string | null
+  warehouseLabel: string | null
   handleSubmit: (city: string, warehouse: string) => void
 }) => {
-  const [city, setCity] = useState({ ref: '', label: '' })
-  const [warehouseLabel, setWarehouseLabel] = useState('')
+  const [city, setCity] = useState({ ref: '', label: cityLabel || '' })
+  const [warehouse, setWarehouse] = useState(warehouseLabel || '')
 
   return (
-    <div className="space-y-4">
+    <div className="mx-auto max-w-lg space-y-4">
       <Select
         setSelectedValue={(option) => {
-          setWarehouseLabel('')
+          setWarehouse('')
           setCity({ ref: option.value, label: option.label })
         }}
         id="city"
         label="City"
         fetchOptions={getCityRef!}
+        defaultValue={cityLabel}
       />
       <Select
-        setSelectedValue={(option) => setWarehouseLabel(option.label)}
+        setSelectedValue={(option) => setWarehouse(option.label)}
         id="warehouse"
         label="Warehouse"
         fetchOptions={(value) => getWarehouseOptions(city.ref, value)!}
         refreshValue={city.ref}
+        defaultValue={warehouseLabel}
       />
       <button
         className="
@@ -39,9 +45,9 @@ const NovaPostSelect = ({
           ease-in-out hover:bg-dark-green-600 focus:opacity-50 focus:outline-none focus:ring-2
           focus:ring-dark-green-500"
         type="submit"
-        onClick={() => handleSubmit(city.label, warehouseLabel)}
+        onClick={() => handleSubmit(city.label, warehouse)}
       >
-        Submit
+        Next
       </button>
     </div>
   )
