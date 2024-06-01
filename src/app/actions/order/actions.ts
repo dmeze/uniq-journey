@@ -16,7 +16,7 @@ export const getOrders = async () => {
   }
 
   return prisma.order
-    .findUnique({
+    .findMany({
       where: {
         userId: userIdCookie?.value,
       },
@@ -32,16 +32,18 @@ export const getOrders = async () => {
         },
       },
     })
-    .then((order) => ({
-      ...order,
-      products: order?.products.map(({ perfume, quantity, size, price }) => ({
-        ...perfume,
-        size,
-        price,
-        quantity,
-        aromas: perfume.aromas,
+    .then((orders) =>
+      orders.map((order) => ({
+        ...order,
+        products: order?.products.map(({ perfume, quantity, size, price }) => ({
+          ...perfume,
+          size,
+          price,
+          quantity,
+          aromas: perfume.aromas,
+        })),
       })),
-    }))
+    )
 }
 
 export const createOrder = async (orderDetails: {
