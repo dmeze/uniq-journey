@@ -35,6 +35,21 @@ export const getCurrentUser = async () => {
     where: {
       id: userIdCookie.value,
     },
+    include: {
+      orders: {
+        include: {
+          products: {
+            include: {
+              perfume: {
+                include: {
+                  aromas: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   })
 }
 

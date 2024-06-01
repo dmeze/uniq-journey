@@ -40,24 +40,25 @@ model Perfume {
 }
 
 model User {
-  id       String  @id @db.Uuid
-  name     String?
-  phone    String?
-  email    String? @unique
-  city  String?
-  warehouse  String?
+  id        String  @id @db.Uuid
+  name      String?
+  phone     String?
+  email     String? @unique
+  city      String?
+  warehouse String?
   password  String?
-  carts    Cart[]
+  carts     Cart[]
   orders    Order[]
 }
 
 model Order {
-  id       String      @id @db.Uuid
-  userId   String      @unique @db.Uuid
-  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  total    Int
-  products OrderItem[]
-  status   String
+  id         String      @id @db.Uuid
+  userId     String      @db.Uuid
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  total      Int
+  products   OrderItem[]
+  status     String
+  createDate DateTime    @default(now())
 }
 
 model OrderItem {

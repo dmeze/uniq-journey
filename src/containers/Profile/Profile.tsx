@@ -1,14 +1,16 @@
+'use server'
+
 import React from 'react'
+import type { Order, User } from '@prisma/client'
 
-const Profile = () => {
-  const userInfo = {
-    name: 'John Doe',
-    email: 'john@example.com',
-  }
+import { getCurrentUser } from '@/app/actions/user/actions'
 
-  const orderHistory = [
-    { orderId: '123', date: '2021-01-01', total: 99.99, status: 'Delivered' },
-  ]
+interface UserWithOrder extends User {
+  orders: Order[]
+}
+
+const Profile = async () => {
+  const user = (await getCurrentUser()) as unknown as UserWithOrder
 
   return (
     <div className="container mx-auto my-8 p-4">
@@ -18,10 +20,10 @@ const Profile = () => {
             <h2 className="mb-4 text-xl font-bold">User Information</h2>
             <div className="flex-1">
               <p>
-                <strong>Name:</strong> {userInfo.name}
+                <strong>Name:</strong> {user.name}
               </p>
               <p>
-                <strong>Email:</strong> {userInfo.email}
+                <strong>Email:</strong> {user.email}
               </p>
             </div>
             <button
@@ -37,13 +39,14 @@ const Profile = () => {
           <div className="flex flex-1 flex-col rounded bg-white p-4 shadow">
             <h2 className="mb-4 text-xl font-bold">Order History</h2>
             <ul className="flex-1">
-              {orderHistory.map((order) => (
-                <li key={order.orderId} className="mb-3 border-b p-3">
+              {user.orders.map((order) => (
+                <li key={order.id} className="mb-3 border-b p-3">
                   <p>
-                    <strong>Order ID:</strong> {order.orderId}
+                    <strong>Order ID:</strong> {order.id}
                   </p>
                   <p>
-                    <strong>Date:</strong> {order.date}
+                    <strong>Date:</strong>{' '}
+                    {new Date(order.createDate).toLocaleString()}
                   </p>
                   <p>
                     <strong>Total:</strong> ${order.total.toFixed(2)}

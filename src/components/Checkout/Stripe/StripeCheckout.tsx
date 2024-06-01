@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { FormEventHandler } from 'react'
 import {
   useStripe,
@@ -6,19 +7,24 @@ import {
   PaymentElement,
   Elements,
 } from '@stripe/react-stripe-js'
+import type { CartItem } from '@prisma/client'
 
 import { getStripe } from '@/components/Checkout/Stripe/getStripe'
 import { createPaymentIntent } from '@/components/Checkout/Stripe/stripeAction'
 import PageLoader from '@/components/Loaders/PageLoader'
 import { Success, Error } from '@/components/Icons/Icons'
+import { createOrder } from '@/app/actions/order/actions'
 
 const CheckoutForm = ({
   totalPrice,
+  items,
   userName,
 }: {
   totalPrice: number
+  items: CartItem[]
   userName: string
 }) => {
+  const { push } = useRouter()
   const [payment, setPayment] = useState<{
     status: 'initial' | 'processing' | 'error' | 'succeeded'
   }>({ status: 'initial' })
@@ -53,7 +59,7 @@ const CheckoutForm = ({
         clientSecret,
         redirect: 'if_required',
         confirmParams: {
-          return_url: 'http://0.0.0.0:3000/checkout',
+          return_url: `${window.location.origin}/profile`,
           payment_method_data: {
             billing_details: {
               name: userName,
@@ -66,6 +72,14 @@ const CheckoutForm = ({
         errorHandler()
       } else {
         setPayment({ status: 'succeeded' })
+
+        const { success } = await createOrder({ total: totalPrice, items })
+
+        if (success) {
+          setTimeout(() => push('/profile'), 3000)
+        } else {
+          errorHandler()
+        }
       }
     } catch (err) {
       errorHandler()
@@ -135,9 +149,11 @@ const CheckoutForm = ({
 
 export default function StripeCheckout({
   cartTotal,
+  items,
   userName,
 }: {
   cartTotal: number
+  items: CartItem[]
   userName: string
 }) {
   return (
@@ -149,7 +165,7 @@ export default function StripeCheckout({
         amount: cartTotal,
       }}
     >
-      <CheckoutForm totalPrice={cartTotal} userName={userName} />
+      <CheckoutForm totalPrice={cartTotal} items={items} userName={userName} />
     </Elements>
   )
 }

@@ -259,3 +259,34 @@ export const migrateCart = async (prevUserId: string, newUserId: string) => {
     return { success: false, message: 'Error migrating cart' }
   }
 }
+
+export const clearCart = async (userId: string) => {
+  const cart = await prisma.cart.findUnique({
+    where: {
+      userId,
+    },
+  })
+
+  if (!cart) {
+    throw new Error('Cart not found')
+  }
+
+  await prisma.cartItem.deleteMany({
+    where: {
+      cartId: cart.id,
+    },
+  })
+
+  await prisma.cart.update({
+    where: {
+      id: cart.id,
+    },
+    data: {
+      count: 0,
+      total: 0,
+    },
+  })
+
+  revalidatePath('/')
+  return { success: true }
+}
