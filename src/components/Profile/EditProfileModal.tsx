@@ -83,7 +83,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
           label="Warehouse"
           fetchOptions={(value) => getWarehouseOptions(city.value, value)}
           refreshValue={city.value}
-          defaultValue={user.warehouse}
+          defaultValue={warehouse}
         />
         <div className="flex justify-end">
           <button
