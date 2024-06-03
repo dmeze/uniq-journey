@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 
 import Select from '@/components/Select/ActionSelect'

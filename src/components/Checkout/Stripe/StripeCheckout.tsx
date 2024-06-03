@@ -73,7 +73,10 @@ const CheckoutForm = ({
       } else {
         setPayment({ status: 'succeeded' })
 
-        const { success } = await createOrder({ total: totalPrice, items })
+        const { success } = await createOrder({
+          total: totalPrice / 100,
+          items,
+        })
 
         if (success) {
           setTimeout(() => push('/profile'), 3000)
