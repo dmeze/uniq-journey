@@ -79,7 +79,7 @@ const CheckoutForm = ({
         })
 
         if (success) {
-          setTimeout(() => push('/profile'), 3000)
+          push('/profile')
         } else {
           errorHandler()
         }
@@ -159,6 +159,8 @@ export default function StripeCheckout({
   items: CartItem[]
   userName: string
 }) {
+  if (!cartTotal) return null
+
   return (
     <Elements
       stripe={getStripe()}
