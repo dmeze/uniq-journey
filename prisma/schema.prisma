@@ -70,7 +70,7 @@ model OrderItem {
   price     Int
   size      String
 
-  @@id([orderId, perfumeId])
+  @@unique([orderId, perfumeId, size])
 }
 
 model Aroma {
