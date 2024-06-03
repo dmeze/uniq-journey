@@ -19,6 +19,12 @@ export interface UserMailData {
   warehouse: string
 }
 
+export interface UserUpdateData extends UserMailData {
+  name: string
+  email: string
+  phone: string
+}
+
 export interface UserLoginData {
   email: string
   password: string
@@ -83,7 +89,9 @@ export const loginUser = async (loginData: UserLoginData) => {
   }
 }
 
-export const updateUser = async (data: UserInformationData | UserMailData) => {
+export const updateUser = async (
+  data: UserInformationData | UserMailData | UserUpdateData,
+) => {
   try {
     const userIdCookie = cookies().get('uuid')
 

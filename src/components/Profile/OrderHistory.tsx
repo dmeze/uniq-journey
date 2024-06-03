@@ -23,7 +23,7 @@ const OrderHistory = ({ orders }: { orders: OrderWithProducts[] }) => {
       <h2 className="mb-4 text-2xl font-semibold text-dark-green-500">
         Order History
       </h2>
-      <ul className="max-h-96 space-y-4 overflow-y-auto">
+      <ul className="max-h-[19.5rem] space-y-4 overflow-y-auto">
         {orders.map((order) => (
           <li key={order.id} className="rounded p-4">
             <button

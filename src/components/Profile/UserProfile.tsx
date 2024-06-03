@@ -1,10 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import type { User } from '@prisma/client'
 import { PencilSimple } from 'phosphor-react'
+import type { User } from '@prisma/client'
 
-import EditProfileModal from './EditProfileModal'
+import { userFields } from '@/components/Profile/constants'
+
+import EditProfileModal, { type UserWithKey } from './EditProfileModal'
 
 interface UserProfileProps {
   user: User
@@ -12,7 +14,6 @@ interface UserProfileProps {
 
 const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   const [isModalOpen, setModalOpen] = useState(false)
-  const [userInfo, setUserInfo] = useState<User>(user)
 
   const handleEditClick = () => {
     setModalOpen(true)
@@ -21,19 +22,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   const handleCloseModal = () => {
     setModalOpen(false)
   }
-
-  const handleSaveProfile = (updatedUser: User) => {
-    setUserInfo(updatedUser)
-    setModalOpen(false)
-  }
-
-  const displayFields = [
-    { label: 'Name', value: userInfo.name },
-    { label: 'Email', value: userInfo.email },
-    { label: 'Phone', value: userInfo.phone },
-    { label: 'City', value: userInfo.city },
-    { label: 'Warehouse', value: userInfo.warehouse },
-  ]
 
   return (
     <div className="flex h-full flex-col justify-center rounded bg-white p-6 shadow-md">
@@ -51,7 +39,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         </button>
       </div>
       <div className="mt-2 flex-1 space-y-4 text-lg text-dark-green">
-        {displayFields.map((field) => (
+        {userFields.map((field) => (
           <div key={field.label}>
             {field.label === 'City' && (
               <h2 className="my-6 text-2xl font-semibold text-dark-green-300">
@@ -59,16 +47,16 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
               </h2>
             )}
             <p className="mb-2">
-              <strong>{field.label}:</strong> {field.value}
+              <strong>{field.label}:</strong>{' '}
+              {(user as unknown as UserWithKey)[field.name]}
             </p>
           </div>
         ))}
       </div>
       <EditProfileModal
-        user={userInfo}
+        user={user}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        onSave={handleSaveProfile}
       />
     </div>
   )
