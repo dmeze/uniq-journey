@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react'
 import { PencilSimple } from 'phosphor-react'
+import type { User } from '@prisma/client'
 
 import { userFields } from '@/components/Profile/constants'
 
-import type { UserWithKey } from './EditProfileModal'
-import EditProfileModal from './EditProfileModal'
+import EditProfileModal, { type UserWithKey } from './EditProfileModal'
 
 interface UserProfileProps {
-  user: UserWithKey
+  user: User
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
@@ -47,7 +47,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
               </h2>
             )}
             <p className="mb-2">
-              <strong>{field.label}:</strong> {user[field.name]}
+              <strong>{field.label}:</strong>{' '}
+              {(user as unknown as UserWithKey)[field.name]}
             </p>
           </div>
         ))}
