@@ -96,7 +96,7 @@ const FormSteps = ({
           className={`flex min-h-[350px] flex-col p-4 shadow-lg transition-all duration-500 ${
             step === id
               ? 'relative translate-x-0 opacity-100'
-              : 'invisible absolute translate-x-full opacity-0'
+              : 'invisible absolute left-0 top-0 translate-x-full p-0 opacity-0'
           }`}
         >
           {tabName && (

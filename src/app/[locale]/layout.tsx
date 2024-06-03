@@ -39,7 +39,7 @@ export default function RootLayout({
             <PageLoaderProvider>
               <Header />
               <Cart />
-              <main className="h-screen-wo-header">{children}</main>
+              <main>{children}</main>
             </PageLoaderProvider>
           </body>
         </NextIntlClientProvider>
