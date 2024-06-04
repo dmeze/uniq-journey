@@ -8,11 +8,11 @@ import {
   Elements,
 } from '@stripe/react-stripe-js'
 import type { CartItem } from '@prisma/client'
+import { Check, XCircle } from 'phosphor-react'
 
 import { getStripe } from '@/components/Checkout/Stripe/getStripe'
 import { createPaymentIntent } from '@/components/Checkout/Stripe/stripeAction'
 import PageLoader from '@/components/Loaders/PageLoader'
-import { Success, Error } from '@/components/Icons/Icons'
 import { createOrder } from '@/app/actions/order/actions'
 
 const CheckoutForm = ({
@@ -123,16 +123,16 @@ const CheckoutForm = ({
       {payment.status === 'processing' && <PageLoader size="50px" />}
       {payment.status === 'succeeded' && (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white opacity-80">
-          <div className="flex size-16 items-center justify-center rounded-full bg-green-500 p-4">
-            <Success />
+          <div className="flex size-16 items-center justify-center rounded-full bg-green-500 p-4 text-white">
+            <Check size={28} weight="bold" />
           </div>
           <p className="mt-4 font-semibold text-green-500">Payment success!</p>
         </div>
       )}
       {payment.status === 'error' && (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white opacity-80">
-          <div className="flex size-16 items-center justify-center rounded-full bg-red-500 p-4">
-            <Error />
+          <div className="flex size-16 items-center justify-center rounded-full bg-red-500 p-4 text-white">
+            <XCircle size={28} weight="bold" />
           </div>
           <p className="mt-4 font-semibold text-red-500">
             Something went wrong...

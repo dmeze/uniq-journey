@@ -3,8 +3,8 @@
 import * as React from 'react'
 import SlickSlider from 'react-slick'
 import { Fragment } from 'react'
+import { ArrowRight, ArrowLeft } from 'phosphor-react'
 
-import { ArrowLeft, ArrowRight } from '@/components/Icons/Icons'
 import Card from '@/components/Card'
 
 import 'slick-carousel/slick/slick-theme.css'
@@ -28,10 +28,10 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
       <button
         type="button"
         aria-label="prev-arrow"
-        className="z-10"
+        className="z-10 hover:text-dark-green-300"
         onClick={() => sliderRef.current?.slickPrev()}
       >
-        <ArrowLeft />
+        <ArrowLeft size={28} weight="bold" />
       </button>
       <div className="w-[calc(100%-72px)]">
         <SlickSlider
@@ -69,10 +69,10 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
       <button
         type="button"
         aria-label="next-arrow"
-        className="z-10 rounded-full"
+        className="z-10 rounded-full hover:text-dark-green-300"
         onClick={() => sliderRef.current?.slickNext()}
       >
-        <ArrowRight />
+        <ArrowRight size={28} weight="bold" />
       </button>
     </div>
   )
