@@ -12,11 +12,10 @@ import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 interface CardProps {
   imageURLs: string[]
   name: string
-  description: string
   id: string
 }
 
-const Card = ({ imageURLs, name, description, id }: CardProps) => {
+const Card = ({ imageURLs, name, id }: CardProps) => {
   const dispatch = useDispatch()
   const [selectedSize, setSelectedSize] = useState(sevenMl)
   const { startTransition } = useContext(PageLoaderContext)!
@@ -47,7 +46,6 @@ const Card = ({ imageURLs, name, description, id }: CardProps) => {
       </div>
       <div className="px-6 py-4">
         <h2 className="mb-2 text-xl font-semibold text-gray-900">{name}</h2>
-        <p className="text-base text-gray-700">{description}</p>
       </div>
       <div className="flex flex-wrap px-6 pb-2 pt-4">
         {sizeOptions.map((option) => (

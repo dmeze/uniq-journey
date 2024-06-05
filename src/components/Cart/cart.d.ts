@@ -3,7 +3,6 @@ import type { PerfumeAroma } from '@prisma/client'
 export interface PerfumeAromaType {
   id?: string
   name: string
-  description: string
   imageURLs: string[]
   aroma?: PerfumeAroma
   size: string

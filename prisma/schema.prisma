@@ -30,13 +30,12 @@ model CartItem {
 }
 
 model Perfume {
-  id          String         @id @db.Uuid
-  name        String
-  description String
-  imageURLs   String[]
-  aromas      PerfumeAroma[]
-  Carts       CartItem[]
-  OrderItem   OrderItem[]
+  id        String         @id @db.Uuid
+  name      String
+  imageURLs String[]
+  aromas    PerfumeAroma[]
+  Carts     CartItem[]
+  OrderItem OrderItem[]
 }
 
 model User {
@@ -74,10 +73,9 @@ model OrderItem {
 }
 
 model Aroma {
-  id          String         @id @db.Uuid
-  name        String
-  description String
-  perfumes    PerfumeAroma[]
+  id       String         @id @db.Uuid
+  name     String         @unique
+  perfumes PerfumeAroma[]
 }
 
 model PerfumeAroma {

@@ -11,28 +11,24 @@ const BestSellers = () => {
           {
             id: '1',
             name: 'Paris',
-            description: 'Christmas Paris',
             imageURLs: ['/chicago.jpg'],
             price: 100,
           },
           {
             id: '2',
             name: 'Paris',
-            description: 'Christmas Paris',
             imageURLs: ['/chicago.jpg'],
             price: 100,
           },
           {
             id: '3',
             name: 'Paris',
-            description: 'Christmas Paris',
             imageURLs: ['/chicago.jpg'],
             price: 100,
           },
           {
             id: '4',
             name: 'Paris',
-            description: 'Christmas Paris',
             imageURLs: ['/chicago.jpg'],
             price: 100,
           },
