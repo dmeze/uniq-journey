@@ -15,7 +15,6 @@ interface SliderProps {
     id: string
     imageURLs: string[]
     name: string
-    description: string
     price: number
   }[]
 }

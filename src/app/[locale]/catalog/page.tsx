@@ -1,5 +1,12 @@
-import CatalogContainer from '@/containers/Catalog'
+import { Suspense } from 'react'
 
-const Catalog = () => <CatalogContainer />
+import CatalogContainer from '@/containers/Catalog'
+import PageLoader from '@/components/Loaders/PageLoader'
+
+const Catalog = ({ searchParams }: { searchParams: { aromas?: string } }) => (
+  <Suspense fallback={<PageLoader size="50px" />}>
+    <CatalogContainer searchParams={searchParams} />
+  </Suspense>
+)
 
 export default Catalog
