@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { MagnifyingGlass, ShoppingCart, User } from 'phosphor-react'
 
@@ -13,10 +13,13 @@ import type { UserProfileProps } from '@/containers/Profile/Profile'
 import { logoutUser } from '@/app/actions/user/actions'
 import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 
+import SignInSignUpModal from './SignInSignUpModal'
+
 const Header = ({ user }: { user: UserProfileProps }) => {
   const dispatch = useDispatch()
   const t = useTranslations('Header')
   const { startTransition } = useContext(PageLoaderContext)!
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     create().then()
@@ -83,25 +86,42 @@ const Header = ({ user }: { user: UserProfileProps }) => {
                 <User size={26} weight="bold" />
                 {user?.name}
               </p>
-              <div className="absolute bottom-[-82px] mt-2 hidden rounded-lg rounded-t-none bg-white-yellow shadow-lg group-hover:block group-hover:scale-105">
-                <Link
-                  href={PROFILE_PAGE}
-                  className="block px-4 py-2 hover:text-dark-green-300 hover:shadow-inner"
-                >
-                  {t('profile')}
-                </Link>
-                <button
-                  type="button"
-                  onClick={logout}
-                  className="block px-4 py-2 hover:text-dark-green-300 hover:shadow-inner"
-                >
-                  {t('logout')}
-                </button>
+              <div className="absolute top-[57px] mt-2 hidden rounded-lg rounded-t-none bg-white-yellow shadow-lg group-hover:block group-hover:scale-105">
+                {user?.name ? (
+                  <>
+                    <Link
+                      href={PROFILE_PAGE}
+                      className="block px-4 py-2 hover:text-dark-green-300 hover:shadow-inner"
+                    >
+                      {t('profile')}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={logout}
+                      className="block px-4 py-2 hover:text-dark-green-300 hover:shadow-inner"
+                    >
+                      {t('logout')}
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    aria-label="User"
+                    type="button"
+                    onClick={() => setIsModalOpen(true)}
+                    className="inline-block whitespace-nowrap px-4 py-2 hover:text-dark-green-300 hover:shadow-inner"
+                  >
+                    {t('signIn')}
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
+      <SignInSignUpModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </header>
   )
 }
