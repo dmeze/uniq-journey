@@ -2,17 +2,21 @@
 
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { MagnifyingGlass, ShoppingCart, User } from 'phosphor-react'
 
 import { navs, PROFILE_PAGE } from '@/components/Header/constants'
 import { create } from '@/app/actions/actions'
 import { setIsCartOpened } from '@/features/cart/cartSlice'
+import type { UserProfileProps } from '@/containers/Profile/Profile'
+import { logoutUser } from '@/app/actions/user/actions'
+import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 
-const Header = () => {
+const Header = ({ user }: { user: UserProfileProps }) => {
   const dispatch = useDispatch()
   const t = useTranslations('Header')
+  const { startTransition } = useContext(PageLoaderContext)!
 
   useEffect(() => {
     create().then()
@@ -20,6 +24,12 @@ const Header = () => {
 
   const handleOpenCart = () => {
     dispatch(setIsCartOpened())
+  }
+
+  const logout = () => {
+    startTransition(async () => {
+      await logoutUser()
+    })
   }
 
   return (
@@ -60,11 +70,6 @@ const Header = () => {
             <div className="flex h-full w-10 cursor-pointer items-center justify-center hover:text-dark-green-300">
               <MagnifyingGlass size={26} weight="bold" />
             </div>
-            <div className="flex h-full w-10 cursor-pointer items-center justify-center hover:text-dark-green-300">
-              <Link href={PROFILE_PAGE}>
-                <User size={26} weight="bold" />
-              </Link>
-            </div>
             <button
               aria-label="Cart"
               type="button"
@@ -73,6 +78,27 @@ const Header = () => {
             >
               <ShoppingCart size={26} weight="bold" />
             </button>
+            <div className="group relative flex h-full cursor-pointer items-center justify-center hover:shadow-inner">
+              <p className="flex items-end gap-2">
+                <User size={26} weight="bold" />
+                {user?.name}
+              </p>
+              <div className="absolute bottom-[-82px] mt-2 hidden rounded-lg rounded-t-none bg-white-yellow shadow-lg group-hover:block group-hover:scale-105">
+                <Link
+                  href={PROFILE_PAGE}
+                  className="block px-4 py-2 hover:text-dark-green-300 hover:shadow-inner"
+                >
+                  {t('profile')}
+                </Link>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="block px-4 py-2 hover:text-dark-green-300 hover:shadow-inner"
+                >
+                  {t('logout')}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -4,9 +4,9 @@ import { Nunito } from 'next/font/google'
 import { NextIntlClientProvider, useMessages } from 'next-intl'
 import type { ReactNode } from 'react'
 
-import Header from '@/components/Header/Header'
 import Cart from '@/containers/Cart/Cart'
 import PageLoaderProvider from '@/providers/PageLoaderProvider'
+import HeaderContainer from '@/containers/Header/HeaderContainer'
 
 import StoreProvider from './StoreProvider'
 
@@ -37,7 +37,7 @@ export default function RootLayout({
             suppressHydrationWarning
           >
             <PageLoaderProvider>
-              <Header />
+              <HeaderContainer />
               <Cart />
               <main>{children}</main>
             </PageLoaderProvider>

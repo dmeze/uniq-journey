@@ -3,6 +3,7 @@
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import bcrypt from 'bcrypt'
+import { v4 } from 'uuid'
 
 import prisma from '@/app/actions'
 import { migrateCart } from '@/app/actions/cart/actions'
@@ -96,6 +97,13 @@ export const loginUser = async (loginData: UserLoginData) => {
     revalidatePath('/')
     return { success: false }
   }
+}
+
+export const logoutUser = async () => {
+  const month = 30 * 24 * 60 * 60 * 1000
+  cookies().set('uuid', v4(), { expires: Date.now() + month })
+
+  revalidatePath('/')
 }
 
 export const updateUser = async (
