@@ -6,6 +6,8 @@
     "title": "Uniq Journey",
     "home": "Home",
     "catalog": "Catalog",
-    "constructor": "Constructor"
+    "constructor": "Constructor",
+    "profile": "Profile",
+    "logout": "Logout"
   }
 }
