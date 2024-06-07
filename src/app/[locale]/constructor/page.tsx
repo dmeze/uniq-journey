@@ -1,4 +1,4 @@
-import ConstructorContainer from '@/containers/Constructor'
+import ConstructorContainer from '@/containers/Constructor/ConstructorContainer'
 
 const Constructor = () => <ConstructorContainer />
 

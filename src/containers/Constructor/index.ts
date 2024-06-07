@@ -1,3 +1,3 @@
-import Constructor from './Constructor'
+import ConstructorContainer from './ConstructorContainer'
 
-export default Constructor
+export default ConstructorContainer
