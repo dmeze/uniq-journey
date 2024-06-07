@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { CartItem, User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
 import { signInFields, signUpFields } from '@/components/Checkout/constants'
 import Form from '@/components/Form'
@@ -13,6 +13,7 @@ import type {
 } from '@/app/actions/user/actions'
 import { loginUser, updateUser } from '@/app/actions/user/actions'
 import UserInformationTabs from '@/components/Checkout/UserInformationTabs'
+import type { OrderPerfumeItems } from '@/app/actions/order/actions'
 
 const FormSteps = ({
   user,
@@ -20,7 +21,7 @@ const FormSteps = ({
   cartTotal,
 }: {
   user: User
-  items: CartItem[]
+  items: OrderPerfumeItems[]
   cartTotal: number
 }) => {
   const isUserLoggedIn = !!user?.name

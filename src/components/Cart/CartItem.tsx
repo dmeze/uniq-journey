@@ -13,46 +13,66 @@ interface ICartItemProps {
 }
 
 const CartItem = ({
-  product: { id, size, price, quantity, imageURLs, name },
+  product: { id, size, price, quantity, imageURLs, name, userId },
   cartId,
 }: ICartItemProps) => {
   const [isPending, startTransition] = useTransition()
 
   const handleIncrease = async () => {
     startTransition(async () => {
-      await addItemToCart({
-        cartId,
-        perfumeId: id!,
-        size,
-        price,
-      })
+      await addItemToCart(
+        userId
+          ? {
+              cartId,
+              userPerfumeId: id!,
+              size,
+              price,
+            }
+          : {
+              cartId,
+              perfumeId: id!,
+              size,
+              price,
+            },
+      )
     })
   }
 
   const handleDecrease = async () => {
     startTransition(async () => {
-      await removeItemFromCart({
-        cartId,
-        perfumeId: id!,
-        size,
-        price,
-      })
+      await removeItemFromCart(
+        userId
+          ? {
+              cartId,
+              userPerfumeId: id!,
+              size,
+              price,
+            }
+          : {
+              cartId,
+              perfumeId: id!,
+              size,
+              price,
+            },
+      )
     })
   }
 
   return (
     <div className="flex items-center justify-between rounded border border-gray-200 p-4 hover:bg-gray-50">
       <div className="flex items-center space-x-4">
-        <div className="size-16 flex-none">
-          <Image
-            priority
-            src={imageURLs[0]}
-            alt={name}
-            width={64}
-            height={64}
-            className="size-full rounded-lg object-cover object-center"
-          />
-        </div>
+        {imageURLs && (
+          <div className="size-16 flex-none">
+            <Image
+              priority
+              src={imageURLs[0]}
+              alt={name}
+              width={64}
+              height={64}
+              className="size-full rounded-lg object-cover object-center"
+            />
+          </div>
+        )}
         <div className="grow">
           <h3 className="text-lg font-semibold">{name}</h3>
           <p className="text-sm text-gray-500">{size}</p>
