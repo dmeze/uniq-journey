@@ -51,6 +51,15 @@ export const getCurrentUser = async () => {
                   aromas: true,
                 },
               },
+              userPerfume: {
+                include: {
+                  aromas: {
+                    include: {
+                      aroma: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },

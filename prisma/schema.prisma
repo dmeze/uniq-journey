@@ -17,16 +17,18 @@ model Cart {
 }
 
 model CartItem {
-  id        String  @id @db.Uuid
-  cartId    String  @db.Uuid
-  perfumeId String  @db.Uuid
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  perfume   Perfume @relation(fields: [perfumeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  quantity  Int     @default(1)
-  price     Int
-  size      String
+  id            String       @id @db.Uuid
+  cartId        String       @db.Uuid
+  perfumeId     String?      @db.Uuid
+  userPerfumeId String?      @db.Uuid
+  cart          Cart         @relation(fields: [cartId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  perfume       Perfume?     @relation(fields: [perfumeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userPerfume   UserPerfume? @relation(fields: [userPerfumeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  quantity      Int          @default(1)
+  price         Int
+  size          String
 
-  @@unique([cartId, perfumeId, size])
+  @@unique([cartId, perfumeId, userPerfumeId, size])
 }
 
 model Perfume {
@@ -38,20 +40,44 @@ model Perfume {
   OrderItem OrderItem[]
 }
 
+model UserPerfume {
+  id          String             @id @db.Uuid
+  name        String?
+  description String?
+  imageUrl    String?
+  size        String
+  aromas      UserPerfumeAroma[]
+  userId      String             @db.Uuid
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Carts       CartItem[]
+  OrderItem   OrderItem[]
+}
+
+model UserPerfumeAroma {
+  userPerfume   UserPerfume @relation(fields: [userPerfumeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  aroma         Aroma       @relation(fields: [aromaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  noteType      AromaType
+  userPerfumeId String      @db.Uuid
+  aromaId       String      @db.Uuid
+
+  @@unique([userPerfumeId, aromaId, noteType])
+}
+
 model User {
-  id        String  @id @db.Uuid
-  name      String?
-  phone     String?
-  email     String? @unique
-  city      String?
-  warehouse String?
-  password  String?
-  carts     Cart[]
-  orders    Order[]
+  id          String        @id @db.Uuid
+  name        String?
+  phone       String?
+  email       String?       @unique
+  city        String?
+  warehouse   String?
+  password    String?
+  carts       Cart[]
+  orders      Order[]
+  userPerfume UserPerfume[]
 }
 
 model Order {
-  id         String      @id @db.Uuid
+  id         String      @id @default(uuid()) @db.Uuid
   userId     String      @db.Uuid
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   total      Int
@@ -61,21 +87,25 @@ model Order {
 }
 
 model OrderItem {
-  orderId   String  @db.Uuid
-  perfumeId String  @db.Uuid
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  perfume   Perfume @relation(fields: [perfumeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  quantity  Int     @default(1)
-  price     Int
-  size      String
+  id            String       @id @default(uuid()) @db.Uuid
+  orderId       String       @db.Uuid
+  perfumeId     String?      @db.Uuid
+  userPerfumeId String?      @db.Uuid
+  order         Order        @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  perfume       Perfume?     @relation(fields: [perfumeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userPerfume   UserPerfume? @relation(fields: [userPerfumeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  quantity      Int          @default(1)
+  price         Int
+  size          String
 
-  @@unique([orderId, perfumeId, size])
+  @@unique([orderId, perfumeId, userPerfumeId, size])
 }
 
 model Aroma {
-  id       String         @id @db.Uuid
-  name     String         @unique
-  perfumes PerfumeAroma[]
+  id               String             @id @db.Uuid
+  name             String             @unique
+  perfumes         PerfumeAroma[]
+  UserPerfumeAroma UserPerfumeAroma[]
 }
 
 model PerfumeAroma {

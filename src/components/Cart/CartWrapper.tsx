@@ -51,7 +51,7 @@ const CartWrapper = ({
   return (
     <>
       <div
-        className={`absolute left-0 top-0 z-10 w-[100vw] bg-black
+        className={`absolute left-0 top-0 z-50 w-[100vw] bg-black
           ${isOpened ? 'h-[100vh] opacity-70' : 'h-0 opacity-0'} transition-opacity
           duration-1000`}
       />
@@ -64,7 +64,7 @@ const CartWrapper = ({
         h-full
         w-96 
         ${isOpened ? 'translate-x-0' : 'translate-x-full'}
-        z-20
+        z-[60]
         bg-white
         shadow-lg 
         transition-transform

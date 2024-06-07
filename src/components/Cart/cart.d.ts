@@ -8,6 +8,7 @@ export interface PerfumeAromaType {
   size: string
   quantity: number
   price: number
+  userId?: string
 }
 
 export interface CartData {

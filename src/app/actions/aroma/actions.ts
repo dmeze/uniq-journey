@@ -9,6 +9,10 @@ export interface AromaWithCount {
   count: number
 }
 
+export const getAromas = async () => {
+  return prisma.aroma.findMany()
+}
+
 export const getAromasWithCount = async (
   filteredPerfumes: PerfumeWithAromas[],
 ): Promise<AromaWithCount[]> => {

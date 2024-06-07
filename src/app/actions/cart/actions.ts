@@ -26,7 +26,20 @@ export const getCart = async () => {
           include: {
             perfume: {
               include: {
-                aromas: true,
+                aromas: {
+                  include: {
+                    aroma: true,
+                  },
+                },
+              },
+            },
+            userPerfume: {
+              include: {
+                aromas: {
+                  include: {
+                    aroma: true,
+                  },
+                },
               },
             },
           },
@@ -36,13 +49,14 @@ export const getCart = async () => {
     .then((cart) => ({
       ...cart,
       products: cart?.products.map(
-        ({ perfume, quantity, size, price, id: itemId }) => ({
+        ({ perfume, userPerfume, quantity, size, price, id: itemId }) => ({
           ...perfume,
+          ...userPerfume,
           itemId,
           size,
           price,
           quantity,
-          aromas: perfume.aromas,
+          aromas: perfume?.aromas || userPerfume?.aromas,
         }),
       ),
     }))
@@ -94,24 +108,29 @@ export const deleteCart = async (id: string) => {
 export async function addItemToCart({
   cartId,
   perfumeId,
+  userPerfumeId,
   price,
   size,
 }: {
   cartId: string
-  perfumeId: string
+  perfumeId?: string
+  userPerfumeId?: string
   price: number
   size: string
 }) {
-  const existingItem = await prisma.cartItem.findUnique({
+  const existingItem = await prisma.cartItem.findFirst({
     where: {
-      cartId_perfumeId_size: { cartId, perfumeId, size },
+      cartId,
+      perfumeId: perfumeId ?? undefined,
+      userPerfumeId: userPerfumeId ?? undefined,
+      size,
     },
   })
 
-  if (existingItem && existingItem.size === size) {
+  if (existingItem) {
     await prisma.cartItem.update({
       where: {
-        cartId_perfumeId_size: { cartId, perfumeId, size },
+        id: existingItem.id,
       },
       data: {
         quantity: { increment: 1 },
@@ -122,7 +141,8 @@ export async function addItemToCart({
       data: {
         id: v4(),
         cartId,
-        perfumeId,
+        perfumeId: perfumeId ?? undefined,
+        userPerfumeId: userPerfumeId ?? undefined,
         quantity: 1,
         price,
         size,
@@ -147,24 +167,29 @@ export async function addItemToCart({
 export async function removeItemFromCart({
   cartId,
   perfumeId,
+  userPerfumeId,
   size,
   price,
 }: {
   cartId: string
-  perfumeId: string
+  perfumeId?: string
+  userPerfumeId?: string
   price: number
   size: string
 }) {
-  const existingItem = await prisma.cartItem.findUnique({
+  const existingItem = await prisma.cartItem.findFirst({
     where: {
-      cartId_perfumeId_size: { cartId, perfumeId, size },
+      cartId,
+      perfumeId: perfumeId ?? undefined,
+      userPerfumeId: userPerfumeId ?? undefined,
+      size,
     },
   })
 
   if ((existingItem?.quantity || 0) > 1) {
     await prisma.cartItem.update({
       where: {
-        cartId_perfumeId_size: { cartId, perfumeId, size },
+        id: existingItem?.id,
       },
       data: {
         quantity: { decrement: 1 },
@@ -173,7 +198,7 @@ export async function removeItemFromCart({
   } else {
     await prisma.cartItem.delete({
       where: {
-        cartId_perfumeId_size: { cartId, perfumeId, size },
+        id: existingItem?.id,
       },
     })
   }
@@ -193,7 +218,8 @@ export async function removeItemFromCart({
 }
 
 export const createOrAdd = async (data: {
-  perfumeId: string
+  perfumeId?: string
+  userPerfumeId?: string
   size: string
   price: number
 }) => {

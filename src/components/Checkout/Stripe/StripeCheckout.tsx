@@ -7,12 +7,12 @@ import {
   PaymentElement,
   Elements,
 } from '@stripe/react-stripe-js'
-import type { CartItem } from '@prisma/client'
 import { Check, XCircle } from 'phosphor-react'
 
 import { getStripe } from '@/components/Checkout/Stripe/getStripe'
 import { createPaymentIntent } from '@/components/Checkout/Stripe/stripeAction'
 import PageLoader from '@/components/Loaders/PageLoader'
+import type { OrderPerfumeItems } from '@/app/actions/order/actions'
 import { createOrder } from '@/app/actions/order/actions'
 
 const CheckoutForm = ({
@@ -21,7 +21,7 @@ const CheckoutForm = ({
   userName,
 }: {
   totalPrice: number
-  items: CartItem[]
+  items: OrderPerfumeItems[]
   userName: string
 }) => {
   const { push } = useRouter()
@@ -156,7 +156,7 @@ export default function StripeCheckout({
   userName,
 }: {
   cartTotal: number
-  items: CartItem[]
+  items: OrderPerfumeItems[]
   userName: string
 }) {
   if (!cartTotal) return null

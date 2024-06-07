@@ -2,54 +2,29 @@
 
 import { v4 } from 'uuid'
 import { cookies } from 'next/headers'
-import type { CartItem, Perfume } from '@prisma/client'
 
 import prisma from '@/app/actions'
 import { clearCart } from '@/app/actions/cart/actions'
 
 interface OrderPerfume {
-  perfumeId: string
+  perfumeId?: string
+  userPerfumeId?: string
   quantity: number
   price: number
   size: string
 }
 
-export const getOrders = async () => {
-  const userIdCookie = cookies().get('uuid')
-
-  if (!userIdCookie || !userIdCookie.value) {
-    throw new Error('User is not authenticated')
-  }
-
-  return prisma.order
-    .findMany({
-      where: {
-        userId: userIdCookie?.value,
-      },
-      include: {
-        products: {
-          include: {
-            perfume: {
-              include: {
-                aromas: true,
-              },
-            },
-          },
-        },
-      },
-    })
-    .then((orders) =>
-      orders.map((order) => ({
-        ...order,
-        products: order?.products.map(({ perfume, quantity, size, price }) => ({
-          ...perfume,
-          size,
-          price,
-          quantity,
-          aromas: perfume.aromas,
-        })),
-      })),
-    )
+export interface OrderPerfumeItems {
+  id: string
+  size: string
+  quantity: number
+  name?: string
+  price: number
+  userId?: string
+  description?: string
+  imageURLs?: string[]
+  imageUrl?: string
+  aromas: { noteType: string; aroma: { name: string } }[]
 }
 
 export const orderNotification = async ({
@@ -59,7 +34,7 @@ export const orderNotification = async ({
 }: {
   orderId: string
   userId: string
-  perfumes: OrderPerfume[]
+  perfumes: OrderPerfumeItems[]
 }) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -71,26 +46,26 @@ export const orderNotification = async ({
     return { success: false }
   }
 
-  const perfumeDetails = await prisma.perfume.findMany({
-    where: {
-      id: {
-        in: perfumes.map(({ perfumeId }) => perfumeId),
-      },
-    },
-  })
+  const perfumeInfo = perfumes.map(
+    ({ size, quantity, name, description, imageUrl, aromas }) => {
+      const aromaDetails = aromas
+        .map(({ noteType, aroma }) => `${noteType}: ${aroma.name}`)
+        .join(', ')
 
-  const perfumeMap = perfumeDetails.reduce(
-    (acc, perfume) => {
-      acc[perfume.id] = perfume
-      return acc
+      return `
+      name: ${name},
+      size: ${size},
+      quantity: ${quantity},
+      ${
+        description
+          ? `description: ${description},
+             image: ${imageUrl},
+             aromas: [${aromaDetails}]`
+          : ''
+      }
+      `
     },
-    {} as Record<string, Perfume>,
   )
-
-  const perfumeInfo = perfumes.map(({ perfumeId, size, quantity }) => {
-    const perfume = perfumeMap[perfumeId]
-    return `name: ${perfume.name}, size: ${size}, quantity: ${quantity}`
-  })
 
   const message = `
     orderId: ${orderId}
@@ -121,7 +96,7 @@ export const orderNotification = async ({
 
 export const createOrder = async (orderDetails: {
   total: number
-  items: CartItem[]
+  items: OrderPerfumeItems[]
 }) => {
   const userIdCookie = cookies().get('uuid')
   const orderId = v4()
@@ -137,12 +112,20 @@ export const createOrder = async (orderDetails: {
   }
 
   const orderItems: OrderPerfume[] = items.map(
-    ({ id, quantity, price, size }) => ({
-      perfumeId: id,
-      quantity,
-      price,
-      size,
-    }),
+    ({ id, quantity, price, size, userId }) =>
+      userId
+        ? {
+            userPerfumeId: id,
+            quantity,
+            price,
+            size,
+          }
+        : {
+            perfumeId: id,
+            quantity,
+            price,
+            size,
+          },
   )
 
   await prisma.$transaction([
@@ -164,7 +147,7 @@ export const createOrder = async (orderDetails: {
   await orderNotification({
     orderId,
     userId: userIdCookie.value,
-    perfumes: orderItems,
+    perfumes: items,
   })
 
   return { success: true }

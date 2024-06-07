@@ -1,14 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import type { Order, OrderItem, Perfume } from '@prisma/client'
+import type { Order, OrderItem, Perfume, UserPerfume } from '@prisma/client'
 
 interface OrderWithProducts extends Order {
   products: OrderWithPerfumes[]
 }
 
 interface OrderWithPerfumes extends OrderItem {
-  perfume: Perfume
+  perfume?: Perfume
+  userPerfume?: UserPerfume
 }
 
 const OrderHistory = ({ orders }: { orders: OrderWithProducts[] }) => {
@@ -23,7 +24,7 @@ const OrderHistory = ({ orders }: { orders: OrderWithProducts[] }) => {
       <h2 className="mb-4 text-2xl font-semibold text-dark-green-500">
         Order History
       </h2>
-      <ul className="max-h-[19.5rem] space-y-4 overflow-y-auto">
+      <ul className="min-h-[19.5rem] space-y-4 overflow-y-auto">
         {orders.map((order) => (
           <li key={order.id} className="rounded p-4">
             <button
@@ -60,22 +61,32 @@ const OrderHistory = ({ orders }: { orders: OrderWithProducts[] }) => {
                   Products
                 </h4>
                 <ul className="space-y-2">
-                  {order.products.map((product) => (
-                    <li key={product.perfumeId} className="text-dark-green">
-                      <p>
-                        <strong>Name:</strong> {product.perfume.name}
-                      </p>
-                      <p>
-                        <strong>Quantity:</strong> {product.quantity}
-                      </p>
-                      <p>
-                        <strong>Price:</strong> {product.price} ₴
-                      </p>
-                      <p>
-                        <strong>Size:</strong> {product.size}
-                      </p>
-                    </li>
-                  ))}
+                  {order.products.map(
+                    ({
+                      perfumeId,
+                      perfume,
+                      quantity,
+                      price,
+                      size,
+                      userPerfume,
+                    }) => (
+                      <li key={perfumeId} className="text-dark-green">
+                        <p>
+                          <strong>Name:</strong>{' '}
+                          {perfume?.name || userPerfume?.name}
+                        </p>
+                        <p>
+                          <strong>Quantity:</strong> {quantity}
+                        </p>
+                        <p>
+                          <strong>Price:</strong> {price} ₴
+                        </p>
+                        <p>
+                          <strong>Size:</strong> {size}
+                        </p>
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
             )}
