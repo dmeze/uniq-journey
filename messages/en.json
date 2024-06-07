@@ -8,6 +8,7 @@
     "catalog": "Catalog",
     "constructor": "Constructor",
     "profile": "Profile",
-    "logout": "Logout"
+    "logout": "Logout",
+    "signIn": "Sign In"
   }
 }
