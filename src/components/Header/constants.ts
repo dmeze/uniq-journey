@@ -1,7 +1,7 @@
 export const HOME_PAGE = '/'
 export const CATALOG_PAGE = '/catalog'
 export const PROFILE_PAGE = '/profile'
-export const CONSTRUCTOR_PAGE = '/constructor'
+export const CONSTRUCTOR_PAGE = '/create'
 
 export const navs = [
   {
