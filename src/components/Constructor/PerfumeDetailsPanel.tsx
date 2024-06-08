@@ -12,6 +12,7 @@ import { createUserPerfume } from '@/app/actions/userPerfume/actions'
 import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 import { createOrAdd } from '@/app/actions/cart/actions'
 import { setIsCartOpened } from '@/features/cart/cartSlice'
+import { perfumeDetailsFields } from '@/components/Constructor/constants'
 
 const PerfumeDetailsPanel = ({
   onImageChange,
@@ -56,12 +57,13 @@ const PerfumeDetailsPanel = ({
       <div className={isCollapsed ? 'absolute -z-10' : ''}>
         {!isCollapsed && (
           <>
-            <Input id="name" label="Name" type="text" />
-            <Input id="description" label="Description" type="text" />
+            {perfumeDetailsFields.map((field) => (
+              <Input key={field.id} {...field} />
+            ))}
           </>
         )}
       </div>
-      <div className={isCollapsed ? '' : 'absolute -z-10 '}>
+      <div className={isCollapsed ? '' : 'absolute -z-10'}>
         {isCollapsed && (
           <ImageInput id="image" label="Image" onImageChange={onImageChange} />
         )}
@@ -116,13 +118,11 @@ const PerfumeDetailsPanel = ({
             type="button"
             key={option}
             onClick={() => setSize(option)}
-            className={`mb-2 mr-2 rounded-lg px-3 py-1 text-sm font-medium transition-all duration-300 ease-in-out
-        ${
-          size === option
-            ? 'bg-light-green-100 text-white shadow-md'
-            : 'bg-gray-100 text-gray-700 hover:bg-light-green-700 hover:text-light-green-300'
-        }
-        `}
+            className={`my-2 mr-2 rounded-lg px-3 py-1 text-sm font-medium transition-all duration-300 ease-in-out${
+              size === option
+                ? ' bg-light-green-100 text-white shadow-md'
+                : ' bg-gray-100 text-gray-700 hover:bg-light-green-700 hover:text-light-green-300'
+            }`}
           >
             {option}
           </button>

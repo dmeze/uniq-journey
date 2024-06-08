@@ -17,8 +17,23 @@ export const perfumeDetailsFields = [
     type: 'text',
   },
   {
-    id: 'image',
-    label: 'Image',
-    type: 'image',
+    id: 'description',
+    label: 'Description',
+    type: 'text',
+  },
+]
+
+export const noteTypes = [
+  {
+    id: 'baseNotes',
+    label: 'Base Note',
+  },
+  {
+    id: 'middleNotes',
+    label: 'Middle Note',
+  },
+  {
+    id: 'topNotes',
+    label: 'Top Note',
   },
 ]
