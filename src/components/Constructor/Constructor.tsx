@@ -19,7 +19,7 @@ const Constructor = ({ aromas }: { aromas: Aroma[] }) => {
   const selectedNotes = [...baseNotes, ...middleNotes, ...topNotes]
 
   return (
-    <div className="p-6 lg:px-10 lg:pt-4">
+    <div className="flex flex-col p-6 lg:px-10 lg:pt-4">
       <h1 className="mb-4 text-2xl font-bold text-dark-green-800">
         Perfume Constructor
       </h1>
@@ -29,8 +29,8 @@ const Constructor = ({ aromas }: { aromas: Aroma[] }) => {
         topNotes={topNotes}
         selectedImage={selectedImage}
       />
-      <div className="grid grid-cols-3 gap-4">
-        <div className="col-span-2">
+      <div className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="md:col-span-2">
           <AromaSelectionPanel
             selectedNotes={selectedNotes}
             baseNotes={baseNotes}
@@ -39,7 +39,7 @@ const Constructor = ({ aromas }: { aromas: Aroma[] }) => {
             aromas={aromas}
           />
         </div>
-        <div className="col-span-1">
+        <div className="md:col-span-1">
           <PerfumeDetailsPanel
             aromas={{ baseNotes, middleNotes, topNotes }}
             onImageChange={setSelectedImage}
