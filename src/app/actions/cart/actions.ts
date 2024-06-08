@@ -65,11 +65,19 @@ export const getCart = async () => {
 export const createCart = async (id: string) => {
   const userIdCookie = cookies().get('uuid')
 
-  await prisma.user.create({
-    data: {
-      id: userIdCookie!?.value,
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userIdCookie?.value,
     },
   })
+
+  if (!user) {
+    await prisma.user.create({
+      data: {
+        id: userIdCookie!?.value,
+      },
+    })
+  }
 
   await prisma.cart.create({
     data: {

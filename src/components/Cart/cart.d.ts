@@ -9,6 +9,7 @@ export interface PerfumeAromaType {
   quantity: number
   price: number
   userId?: string
+  imageUrl?: string
 }
 
 export interface CartData {

@@ -13,7 +13,7 @@ interface ICartItemProps {
 }
 
 const CartItem = ({
-  product: { id, size, price, quantity, imageURLs, name, userId },
+  product: { id, size, price, quantity, imageURLs, name, userId, imageUrl },
   cartId,
 }: ICartItemProps) => {
   const [isPending, startTransition] = useTransition()
@@ -61,12 +61,12 @@ const CartItem = ({
   return (
     <div className="flex items-center justify-between rounded border border-gray-200 p-4 hover:bg-gray-50">
       <div className="flex items-center space-x-4">
-        {imageURLs && (
+        {(imageURLs || imageUrl) && (
           <div className="size-16 flex-none">
             <Image
               priority
-              src={imageURLs[0]}
-              alt={name}
+              src={imageUrl || imageURLs[0]}
+              alt={name || 'image'}
               width={64}
               height={64}
               className="size-full rounded-lg object-cover object-center"

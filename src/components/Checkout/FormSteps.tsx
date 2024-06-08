@@ -83,7 +83,7 @@ const FormSteps = ({
         <StripeCheckout
           items={items}
           cartTotal={cartTotal}
-          userName={user.name!}
+          userName={user?.name!}
         />
       ),
     },
