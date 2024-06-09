@@ -1,13 +1,13 @@
 'use client'
 
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 
 import { setIsCartOpened } from '@/features/cart/cartSlice'
 import { priceBySize, sevenMl, sizeOptions } from '@/components/Card/constants'
 import { createOrAdd } from '@/app/actions/cart/actions'
-import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 
 interface CardProps {
   imageURLs: string[]
@@ -18,18 +18,40 @@ interface CardProps {
 const Card = ({ imageURLs, name, id }: CardProps) => {
   const dispatch = useDispatch()
   const [selectedSize, setSelectedSize] = useState(sevenMl)
-  const { startTransition } = useContext(PageLoaderContext)!
 
   const handleAddToCart = () => {
-    startTransition(async () => {
-      await createOrAdd({
-        perfumeId: id,
-        size: selectedSize,
-        price: priceBySize[selectedSize as keyof typeof priceBySize],
-      })
-
-      dispatch(setIsCartOpened())
-    })
+    toast.promise(
+      async () => {
+        await createOrAdd({
+          perfumeId: id,
+          size: selectedSize,
+          price: priceBySize[selectedSize as keyof typeof priceBySize],
+        })
+      },
+      {
+        pending: `Adding ${name} to the cart...`,
+        success: {
+          render: ({ closeToast }) => (
+            <span>
+              {`${name} is added to the cart. `}
+              <button
+                type="button"
+                className="text-light-green-300"
+                onClick={() => {
+                  dispatch(setIsCartOpened())
+                  closeToast()
+                }}
+              >
+                Click here
+              </button>
+              {` to open the cart.`}
+            </span>
+          ),
+        },
+        error: `Failed to add ${name} to cart. Please, try again.`,
+      },
+      { toastId: 'add-to-cart' },
+    )
   }
 
   return (

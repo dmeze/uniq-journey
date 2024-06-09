@@ -7,14 +7,16 @@ interface ModalProps {
   children: ReactNode
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="relative w-full max-w-md rounded bg-white p-6 shadow-md">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
+          <h2 className="text-2xl font-semibold text-dark-green-800">
+            {title}
+          </h2>
           <button
             type="button"
             onClick={onClose}

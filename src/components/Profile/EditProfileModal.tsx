@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import type { User } from '@prisma/client'
+import { toast } from 'react-toastify'
 
-import { getCityRef, getWarehouseOptions } from '@/components/Checkout/helpers'
-import type { IOption } from '@/components/Select/ActionSelect'
-import ActionSelect from '@/components/Select/ActionSelect'
-import { userFields } from '@/components/Profile/constants'
+import {
+  userFields,
+  userValidationSchema,
+} from '@/components/Profile/constants'
+import Form from '@/components/Form'
 import { updateUser } from '@/app/actions/user/actions'
-import type { UserUpdateData } from '@/app/actions/user/actions'
+import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 
 import Modal from '../Modal'
 
@@ -20,93 +22,74 @@ interface EditProfileModalProps {
   onClose: () => void
 }
 
+interface UserUpdatedFormata {
+  name: string
+  surname: string
+  city: { value: string; label: string }
+  warehouse: { value: string; label: string }
+  email: string
+  phone: string
+}
+
 const EditProfileModal: React.FC<EditProfileModalProps> = ({
   user,
   isOpen,
   onClose,
 }) => {
-  const [city, setCity] = useState({ value: '', label: user.city })
-  const [warehouse, setWarehouse] = useState(user.warehouse)
+  const { startTransition } = useContext(PageLoaderContext)!
 
-  const handleCityChange = (option: IOption) => {
-    setWarehouse('')
-    setCity(option)
-  }
+  const handleSubmit = async (data: UserUpdatedFormata) => {
+    const city = data.city as any
+    const warehouse = data.warehouse as any
 
-  const handleWarehouseChange = (option: IOption) => {
-    setWarehouse(option.label)
-  }
+    if (user.city !== city.label && user.warehouse !== warehouse.label) {
+      if (!city.value || city.value === ' ') {
+        toast.error('Please select the city from the list.')
+        return
+      }
 
-  const handleSubmit = async (formData: FormData) => {
-    onClose()
+      if (!warehouse.value || warehouse.value === ' ') {
+        toast.error('Please select the warehouse from the list.')
+        return
+      }
+    }
 
-    const userData = {
-      ...Object.fromEntries(formData),
+    const finalData = {
+      name: `${data.name} ${data.surname}`,
       city: city.label,
-      warehouse,
-    } as UserUpdateData
+      warehouse: warehouse.label,
+      phone: data.phone,
+      email: data.email,
+    }
 
-    await updateUser(userData)
+    startTransition(async () => {
+      const { success, message } = await updateUser(finalData, true)
+
+      if (success) {
+        onClose()
+      } else {
+        toast.error(message)
+      }
+    })
   }
+
+  const nameSurname = user?.name?.split(' ') || []
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Profile">
-      <form action={handleSubmit}>
-        {userFields.map(
-          ({ name, label, type }) =>
-            type && (
-              <div className="mb-4" key={name}>
-                <label htmlFor={name} className="block text-gray-700">
-                  {label}
-                </label>
-                <input
-                  id={name}
-                  type={type}
-                  name={name}
-                  defaultValue={user[name] || ''}
-                  className="mt-1 w-full rounded border p-2"
-                />
-              </div>
-            ),
-        )}
-        <ActionSelect
-          setSelectedValue={handleCityChange}
-          id="city"
-          label="City"
-          fetchOptions={getCityRef}
-          defaultValue={user.city}
-        />
-        <ActionSelect
-          setSelectedValue={handleWarehouseChange}
-          id="warehouse"
-          label="Warehouse"
-          fetchOptions={(value) => getWarehouseOptions(city.value, value)}
-          refreshValue={city.value}
-          defaultValue={user.warehouse}
-        />
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={onClose}
-            className="mr-4 rounded-lg bg-transparent px-5 py-2 text-dark-green-500 transition duration-300 hover:border hover:border-light-green-500 hover:bg-light-green-600 hover:text-dark-green-900"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="
-                  rounded-lg border-2 border-light-green
-                  bg-light-green
-                  px-6 py-2
-                  font-bold text-white
-                  transition duration-300 hover:-translate-y-1 hover:shadow-lg
-                  disabled:opacity-70
-                "
-          >
-            Save
-          </button>
-        </div>
-      </form>
+      <Form
+        initialValues={{
+          ...user,
+          name: nameSurname[0],
+          surname: nameSurname[1],
+          city: { label: user.city, ref: '' },
+          warehouse: { label: user.warehouse, ref: '' },
+        }}
+        action={handleSubmit}
+        fields={userFields}
+        validationSchema={userValidationSchema}
+        submitText="Update User Info"
+      />
     </Modal>
   )
 }

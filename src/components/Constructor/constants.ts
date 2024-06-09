@@ -1,3 +1,5 @@
+import * as Yup from 'yup'
+
 export const colorsMap = [
   '#5f5d9c',
   '#6196a6',
@@ -37,3 +39,12 @@ export const noteTypes = [
     label: 'Top Note',
   },
 ]
+
+export const nameDescriptionValidationSchema = Yup.object().shape({
+  name: Yup.string().required('Title is required.'),
+  description: Yup.string().required('Description is required.'),
+})
+
+export const imageValidationSchema = Yup.object().shape({
+  image: Yup.mixed().required('Image is required.'),
+})

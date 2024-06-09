@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Nunito } from 'next/font/google'
 import { NextIntlClientProvider, useMessages } from 'next-intl'
 import type { ReactNode } from 'react'
+import { ToastContainer } from 'react-toastify'
 
 import Cart from '@/containers/Cart/Cart'
 import PageLoaderProvider from '@/providers/PageLoaderProvider'
@@ -38,6 +39,13 @@ export default function RootLayout({
           >
             <PageLoaderProvider>
               <HeaderContainer />
+              <ToastContainer
+                stacked
+                draggable
+                draggablePercent={60}
+                autoClose={5000}
+                position="top-right"
+              />
               <Cart />
               <main>{children}</main>
             </PageLoaderProvider>

@@ -79,6 +79,10 @@ export const loginUser = async (loginData: UserLoginData) => {
       },
     })
 
+    if (!user) {
+      return { success: false, message: 'User with such email does not exist!' }
+    }
+
     if (user?.password) {
       const result = await bcrypt.compare(loginData.password, user.password)
 
@@ -87,15 +91,18 @@ export const loginUser = async (loginData: UserLoginData) => {
         cookies().set('uuid', user.id, { expires: Date.now() + month })
         await migrateCart(userIdCookie?.value!, user.id)
 
-        revalidatePath('/')
+        await revalidatePath('/')
         return { success: true }
       }
     }
 
-    return { success: false }
+    return {
+      success: false,
+      message: 'User email or password does not match!',
+    }
   } catch (e) {
     revalidatePath('/')
-    return { success: false }
+    return { success: false, message: 'Something went wrong!' }
   }
 }
 
@@ -108,9 +115,21 @@ export const logoutUser = async () => {
 
 export const updateUser = async (
   data: UserInformationData | UserMailData | UserUpdateData,
+  isEdit = false,
 ) => {
   try {
     const userIdCookie = cookies().get('uuid')
+
+    const user =
+      'email' in data
+        ? await prisma.user.findUnique({
+            where: { email: data?.email },
+          })
+        : { name: '' }
+
+    if (user?.name && !isEdit) {
+      return { success: false, message: 'User with such email already exists!' }
+    }
 
     const updatedData = { ...data } as UserInformationData | UserMailData
 
@@ -132,6 +151,6 @@ export const updateUser = async (
     return { success: true }
   } catch (e) {
     revalidatePath('/')
-    return { success: false }
+    return { success: false, message: 'Something went wrong!' }
   }
 }
