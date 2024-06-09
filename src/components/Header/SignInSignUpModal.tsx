@@ -18,7 +18,7 @@ const SignInSignUpModal = ({
       title={tab === 'new' ? 'Sign Up' : 'Sign In'}
     >
       <div className="m-8">
-        <SignInSignUpForm setTab={setTab} />
+        <SignInSignUpForm setTab={setTab} submitAction={onClose} />
       </div>
     </Modal>
   )

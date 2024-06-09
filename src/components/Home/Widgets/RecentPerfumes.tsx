@@ -5,12 +5,12 @@ import type { Perfume } from '@prisma/client'
 import WidgetContainer from '@/components/Home/WidgetContainer'
 import Slider from '@/components/Slider'
 
-const BestSellers = ({ perfumes }: { perfumes: Perfume[] }) => {
+const RecentPerfumes = ({ recentPerfumes }: { recentPerfumes: Perfume[] }) => {
   return (
-    <WidgetContainer title="Best Sellers">
-      <Slider items={perfumes} />
+    <WidgetContainer title="Recent Perfumes">
+      <Slider items={recentPerfumes} />
     </WidgetContainer>
   )
 }
 
-export default BestSellers
+export default RecentPerfumes

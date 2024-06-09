@@ -15,6 +15,7 @@ interface SliderProps {
     id: string
     imageURLs: string[]
     name: string
+    price?: number
   }[]
 }
 
@@ -22,11 +23,11 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
   const sliderRef = React.useRef<SlickSlider>(null)
 
   return (
-    <div className="flex w-full items-center justify-center">
+    <div className="relative flex items-center justify-center">
       <button
         type="button"
         aria-label="prev-arrow"
-        className="z-10 hover:text-dark-green-300"
+        className="absolute left-0 z-10 hover:text-dark-green-300"
         onClick={() => sliderRef.current?.slickPrev()}
       >
         <ArrowLeft size={28} weight="bold" />
@@ -66,7 +67,7 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
       <button
         type="button"
         aria-label="next-arrow"
-        className="z-10 rounded-full hover:text-dark-green-300"
+        className="absolute right-0 z-10 rounded-full hover:text-dark-green-300"
         onClick={() => sliderRef.current?.slickNext()}
       >
         <ArrowRight size={28} weight="bold" />
