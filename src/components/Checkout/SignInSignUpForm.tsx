@@ -18,8 +18,10 @@ import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 
 const SignInSignUpForm = ({
   setTab,
+  submitAction,
 }: {
   setTab?: Dispatch<SetStateAction<string>>
+  submitAction?: () => void
 }) => {
   const [activeTab, setActiveTab] = useState('new')
   const { startTransition } = useContext(PageLoaderContext)!
@@ -46,6 +48,8 @@ const SignInSignUpForm = ({
       if (!success) {
         toast.error(message)
       }
+
+      if (submitAction) submitAction()
     })
   }
 
@@ -53,6 +57,7 @@ const SignInSignUpForm = ({
     activeTab === 'new'
       ? { fields: signUpFields, validationSchema: signUpValidationSchema }
       : { fields: signInFields, validationSchema: signInValidationSchema }
+
   return (
     <>
       <UserInformationTabs

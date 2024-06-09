@@ -1,4 +1,5 @@
 import type { Aroma, Perfume, PerfumeAroma } from '@prisma/client'
+import { cookies } from 'next/headers'
 
 import prisma from '@/app/actions'
 
@@ -111,4 +112,72 @@ export const getBestSellers = async (limit: number = 10) => {
       }
     })
     .filter((item): item is NonNullable<typeof item> => item !== null)
+}
+
+export const getRecentPerfumes = async (limit: number = 10) => {
+  const userIdCookie = cookies().get('uuid')
+
+  const recentOrders = await prisma.order.findMany({
+    where: {
+      userId: userIdCookie!.value,
+    },
+    take: limit,
+    orderBy: {
+      createDate: 'desc',
+    },
+    include: {
+      products: {
+        include: {
+          perfume: {
+            include: {
+              aromas: {
+                include: {
+                  aroma: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+
+  const recentPerfumes = recentOrders.flatMap((order) => {
+    return order.products
+      .map((orderItem) => {
+        const { perfume } = orderItem
+
+        if (!perfume) return null
+
+        const formattedAromas =
+          perfume.aromas?.map(({ aroma, noteType }) => ({
+            id: aroma.id,
+            name: aroma.name,
+            noteType,
+          })) || []
+
+        return {
+          id: perfume.id,
+          name: perfume.name,
+          imageURLs: perfume.imageURLs,
+          aromas: formattedAromas,
+          orderDate: order.createDate,
+          price: orderItem.price,
+        }
+      })
+      .filter((perfume) => perfume !== null)
+  })
+
+  return recentPerfumes as {
+    id: string
+    name: string
+    imageURLs: string[]
+    aromas: {
+      id: string
+      name: string
+      noteType: string
+    }[]
+    orderDate: Date
+    price: number
+  }[]
 }
