@@ -1,9 +1,14 @@
-import BestSellers from '@/components/Home/Widgets/BestSellers'
+'use server'
 
-const Home = () => {
+import BestSellers from '@/components/Home/Widgets/BestSellers'
+import { getBestSellers } from '@/app/actions/perfume/actions'
+
+const Home = async () => {
+  const bestSellers = await getBestSellers()
+
   return (
     <div className="flex justify-center">
-      <BestSellers />
+      <BestSellers perfumes={bestSellers} />
     </div>
   )
 }

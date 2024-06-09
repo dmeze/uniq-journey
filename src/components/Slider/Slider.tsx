@@ -15,7 +15,6 @@ interface SliderProps {
     id: string
     imageURLs: string[]
     name: string
-    price: number
   }[]
 }
 
@@ -35,10 +34,9 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
       <div className="w-[calc(100%-72px)]">
         <SlickSlider
           infinite
-          lazyLoad="progressive"
-          speed={500}
+          speed={300}
           slidesToShow={3}
-          slidesToScroll={3}
+          slidesToScroll={1}
           arrows={false}
           ref={sliderRef}
           responsive={[
@@ -46,7 +44,7 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
               breakpoint: 1285,
               settings: {
                 slidesToShow: 2,
-                slidesToScroll: 2,
+                slidesToScroll: 1,
               },
             },
             {
