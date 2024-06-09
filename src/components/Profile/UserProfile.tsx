@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { PencilSimple } from 'phosphor-react'
 import type { User } from '@prisma/client'
 
-import { userFields } from '@/components/Profile/constants'
+import { userInformationFields } from '@/components/Profile/constants'
 
 import EditProfileModal, { type UserWithKey } from './EditProfileModal'
 
@@ -39,7 +39,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         </button>
       </div>
       <div className="mt-2 flex-1 space-y-4 text-lg text-dark-green">
-        {userFields.map((field) => (
+        {userInformationFields.map((field) => (
           <div key={field.label}>
             {field.label === 'City' && (
               <h2 className="my-6 text-2xl font-semibold text-dark-green-300">
@@ -48,7 +48,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             )}
             <p className="mb-2">
               <strong>{field.label}:</strong>{' '}
-              {(user as unknown as UserWithKey)[field.name]}
+              {(user as unknown as UserWithKey)[field.id]}
             </p>
           </div>
         ))}

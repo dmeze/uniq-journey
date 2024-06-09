@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { ReactNode } from 'react'
 import { useContext, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 
 import { selectIsCartOpened, setIsCartOpened } from '@/features/cart/cartSlice'
 import { deleteCart } from '@/app/actions/cart/actions'
 import { PageLoaderContext } from '@/providers/PageLoaderProvider'
-import PageLoader from '@/components/Loaders/PageLoader'
 
 const CartWrapper = ({
   cartId,
@@ -23,7 +23,7 @@ const CartWrapper = ({
   const dispatch = useDispatch()
   const cartRef = useRef<HTMLDivElement>(null)
   const isOpened = useSelector(selectIsCartOpened)
-  const { startTransition, isPending } = useContext(PageLoaderContext)!
+  const { startTransition } = useContext(PageLoaderContext)!
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -42,17 +42,25 @@ const CartWrapper = ({
   }, [dispatch, isOpened])
 
   const handleClearCart = () => {
-    startTransition(async () => {
-      dispatch(setIsCartOpened())
-      await deleteCart(cartId)
-    })
+    dispatch(setIsCartOpened())
+    toast.promise(
+      async () => {
+        await deleteCart(cartId)
+      },
+      {
+        pending: 'Clearing cart...',
+        success: 'Cart is cleared.',
+        error: 'Failed to clear the cart! Try again.',
+      },
+      { toastId: 'clear-cart' },
+    )
   }
 
   return (
     <>
       <div
-        className={`absolute left-0 top-0 z-50 w-[100vw] bg-black
-          ${isOpened ? 'h-[100vh] opacity-70' : 'h-0 opacity-0'} transition-opacity
+        className={`fixed left-0 top-0 z-50 w-screen bg-black
+          ${isOpened ? 'h-screen opacity-70' : 'h-0 opacity-0'} transition-opacity
           duration-1000`}
       />
       <div className="relative" ref={cartRef}>
@@ -80,7 +88,7 @@ const CartWrapper = ({
               Close
             </button>
             <h2 className="text-lg font-semibold">Shopping Cart</h2>
-            {isPending ? <PageLoader size="50px" /> : children}
+            {children}
             <div className="flex items-center justify-center space-x-2">
               <button
                 disabled={!cartCount}
@@ -101,8 +109,10 @@ const CartWrapper = ({
                 disabled={!cartCount}
                 type="button"
                 onClick={() => {
-                  push('/checkout')
                   dispatch(setIsCartOpened())
+                  startTransition(() => {
+                    push('/checkout')
+                  })
                 }}
                 className="
                   !ml-10

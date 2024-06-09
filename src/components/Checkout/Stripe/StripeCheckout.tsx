@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { FormEventHandler } from 'react'
 import {
@@ -8,12 +8,14 @@ import {
   Elements,
 } from '@stripe/react-stripe-js'
 import { Check, XCircle } from 'phosphor-react'
+import { toast } from 'react-toastify'
 
 import { getStripe } from '@/components/Checkout/Stripe/getStripe'
 import { createPaymentIntent } from '@/components/Checkout/Stripe/stripeAction'
 import PageLoader from '@/components/Loaders/PageLoader'
 import type { OrderPerfumeItems } from '@/app/actions/order/actions'
 import { createOrder } from '@/app/actions/order/actions'
+import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 
 const CheckoutForm = ({
   totalPrice,
@@ -28,12 +30,16 @@ const CheckoutForm = ({
   const [payment, setPayment] = useState<{
     status: 'initial' | 'processing' | 'error' | 'succeeded'
   }>({ status: 'initial' })
+  const [error, setError] = useState<string | null>(null)
+  const { startTransition } = useContext(PageLoaderContext)!
 
   const stripe = useStripe()
   const elements = useElements()
 
-  const errorHandler = () => {
+  const errorHandler = (message = 'Something went wrong!') => {
     setPayment({ status: 'error' })
+    setError(message)
+    toast.error(message)
   }
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -47,7 +53,7 @@ const CheckoutForm = ({
       const { error: submitError } = await elements.submit()
 
       if (submitError) {
-        errorHandler()
+        errorHandler(submitError.message)
         return
       }
 
@@ -69,20 +75,22 @@ const CheckoutForm = ({
       })
 
       if (confirmError) {
-        errorHandler()
+        errorHandler(confirmError.message)
       } else {
         setPayment({ status: 'succeeded' })
 
-        const { success } = await createOrder({
-          total: totalPrice / 100,
-          items,
-        })
+        startTransition(async () => {
+          const { success } = await createOrder({
+            total: totalPrice / 100,
+            items,
+          })
 
-        if (success) {
-          push('/profile')
-        } else {
-          errorHandler()
-        }
+          if (success) {
+            push('/profile')
+          } else {
+            errorHandler()
+          }
+        })
       }
     } catch (err) {
       errorHandler()
@@ -110,6 +118,7 @@ const CheckoutForm = ({
             transition duration-300
             ease-in-out hover:bg-dark-green-600 focus:opacity-50 focus:outline-none focus:ring-2
             focus:ring-dark-green-500
+            disabled:bg-light-green-500
           "
           type="submit"
           disabled={
@@ -134,9 +143,7 @@ const CheckoutForm = ({
           <div className="flex size-16 items-center justify-center rounded-full bg-red-500 p-4 text-white">
             <XCircle size={28} weight="bold" />
           </div>
-          <p className="mt-4 font-semibold text-red-500">
-            Something went wrong...
-          </p>
+          <p className="mt-4 font-semibold text-red-500">{error}</p>
           <button
             type="button"
             className="mt-2 text-red-500 underline"

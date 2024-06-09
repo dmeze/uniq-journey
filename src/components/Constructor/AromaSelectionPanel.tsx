@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { Aroma } from '@prisma/client'
+import { toast } from 'react-toastify'
 
 import { getColorMap, getLabels } from '@/components/Constructor/helpers'
 import { PageLoaderContext } from '@/providers/PageLoaderProvider'
@@ -39,18 +40,26 @@ const AromaSelectionPanel = ({
       } else if (currentAromas.size < 3) {
         currentAromas.add(aromaName)
       } else {
+        toast.info('You can add up to 3 aroma oils in one note.')
         return
       }
 
       const updatedAromas = Array.from(currentAromas).join(',')
+      let isAdd = true
 
       if (updatedAromas) {
         params.set(noteType, updatedAromas)
       } else {
         params.delete(noteType)
+        isAdd = false
       }
 
       router.push(`${pathname}?${params.toString()}`)
+      toast.success(
+        isAdd
+          ? `Successfully added ${aromaName} to the ${noteType}`
+          : `Successfully removed ${aromaName} from the ${noteType}`,
+      )
     })
   }
 

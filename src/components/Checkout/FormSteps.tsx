@@ -1,19 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import type { User } from '@prisma/client'
+import { toast } from 'react-toastify'
 
-import { signInFields, signUpFields } from '@/components/Checkout/constants'
-import Form from '@/components/Form'
 import NovaPostSelect from '@/components/Checkout/NovaPostSelect'
 import StripeCheckout from '@/components/Checkout/Stripe/StripeCheckout'
-import type {
-  UserInformationData,
-  UserLoginData,
-} from '@/app/actions/user/actions'
-import { loginUser, updateUser } from '@/app/actions/user/actions'
-import UserInformationTabs from '@/components/Checkout/UserInformationTabs'
+import { updateUser } from '@/app/actions/user/actions'
 import type { OrderPerfumeItems } from '@/app/actions/order/actions'
+import { PageLoaderContext } from '@/providers/PageLoaderProvider'
+import SignInSignUpForm from '@/components/Checkout/SignInSignUpForm'
 
 const FormSteps = ({
   user,
@@ -26,49 +22,33 @@ const FormSteps = ({
 }) => {
   const isUserLoggedIn = !!user?.name
   const [step, setStep] = useState(isUserLoggedIn ? 1 : 0)
-  const [activeTab, setActiveTab] = useState('new')
+  const { startTransition } = useContext(PageLoaderContext)!
 
-  const handleUserInfo = async (formData: FormData) => {
-    const { success } =
-      activeTab === 'new'
-        ? await updateUser(
-            Object.fromEntries(formData) as unknown as UserInformationData,
-          )
-        : await loginUser(
-            Object.fromEntries(formData) as unknown as UserLoginData,
-          )
-
-    if (success) setStep(1) // TODO: Add error handling
-  }
+  useEffect(() => {
+    if (isUserLoggedIn) setStep(1)
+  }, [isUserLoggedIn])
 
   const handleSubmitAddress = async (city: string, warehouse: string) => {
-    const { success } = await updateUser({ city, warehouse })
+    startTransition(async () => {
+      const { success, message } = await updateUser({ city, warehouse })
 
-    if (success) setStep(2) // TODO: Add error handling
+      if (success) {
+        setStep(2)
+      } else {
+        toast.error(message)
+      }
+    })
   }
 
   const steps = [
     {
       id: 0,
-      view: (
-        <>
-          <UserInformationTabs
-            setActiveTab={setActiveTab}
-            activeTab={activeTab}
-          />
-          <Form
-            action={handleUserInfo}
-            fields={activeTab === 'new' ? signUpFields : signInFields}
-            submitText="Next"
-          />
-        </>
-      ),
+      view: <SignInSignUpForm />,
     },
     {
       id: 1,
-      showBackButton: !isUserLoggedIn,
       tabName: 'Mail Information',
-      view: (
+      view: isUserLoggedIn && (
         <NovaPostSelect
           handleSubmit={handleSubmitAddress}
           cityLabel={user?.city}

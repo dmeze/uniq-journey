@@ -1,6 +1,7 @@
 'use server'
 
 import type { Order, OrderItem, Perfume, User } from '@prisma/client'
+import { redirect } from 'next/navigation'
 
 import { getCurrentUser } from '@/app/actions/user/actions'
 import UserProfile from '@/components/Profile/UserProfile'
@@ -12,6 +13,8 @@ export interface UserProfileProps extends User {
 
 const Profile = async () => {
   const user = (await getCurrentUser()) as unknown as UserProfileProps
+
+  if (!user?.name) redirect('/')
 
   return (
     <div className="container mx-auto my-8 p-4">
