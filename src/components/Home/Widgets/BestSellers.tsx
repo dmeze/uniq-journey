@@ -1,39 +1,15 @@
 'use client'
 
+import type { Perfume } from '@prisma/client'
+
 import WidgetContainer from '@/components/Home/WidgetContainer'
 import Slider from '@/components/Slider'
 
-const BestSellers = () => {
+const BestSellers = ({ perfumes }: { perfumes: Perfume[] }) => {
+  console.log(perfumes)
   return (
     <WidgetContainer title="Best Sellers">
-      <Slider
-        items={[
-          {
-            id: '1',
-            name: 'Paris',
-            imageURLs: ['/chicago.jpg'],
-            price: 100,
-          },
-          {
-            id: '2',
-            name: 'Paris',
-            imageURLs: ['/chicago.jpg'],
-            price: 100,
-          },
-          {
-            id: '3',
-            name: 'Paris',
-            imageURLs: ['/chicago.jpg'],
-            price: 100,
-          },
-          {
-            id: '4',
-            name: 'Paris',
-            imageURLs: ['/chicago.jpg'],
-            price: 100,
-          },
-        ]}
-      />
+      <Slider items={perfumes} />
     </WidgetContainer>
   )
 }
