@@ -33,7 +33,7 @@ model CartItem {
 
 model Perfume {
   id        String         @id @db.Uuid
-  name      String
+  name      String         @unique
   imageURLs String[]
   aromas    PerfumeAroma[]
   Carts     CartItem[]
