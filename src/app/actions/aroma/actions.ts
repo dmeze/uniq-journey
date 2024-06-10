@@ -4,6 +4,20 @@ import type { PerfumeWithAromas } from '@/app/actions/perfume/actions'
 
 const prisma = new PrismaClient()
 
+export interface Aroma {
+  id: string
+  name: string
+  noteType: string
+  aroma: { id: string; name: string }
+}
+
+export interface Perfume {
+  id: string
+  name: string
+  imageURLs: string[]
+  aromas: Aroma[]
+}
+
 export interface AromaWithCount {
   name: string
   count: number
