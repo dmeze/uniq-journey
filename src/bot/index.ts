@@ -114,8 +114,8 @@ const addPerfumeConversation = async (
         reply_markup: noteTypeKeyboard,
       })
 
-      const { callbackQuery } = await conversation.wait()
-      const noteType = callbackQuery?.data as AromaType
+      const { callbackQuery: noteCallback } = await conversation.wait()
+      const noteType = noteCallback?.data as AromaType
 
       selectedAromas.push({ name: selectedAroma.name, noteType })
       await ctx.reply(
