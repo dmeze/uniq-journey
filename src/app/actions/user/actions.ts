@@ -40,7 +40,7 @@ export const getCurrentUser = async () => {
 
   return prisma.user.findUnique({
     where: {
-      id: userIdCookie.value,
+      id: userIdCookie?.value,
     },
     select: {
       id: true,

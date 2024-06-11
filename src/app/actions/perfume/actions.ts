@@ -124,7 +124,7 @@ export const getRecentPerfumes = async (limit: number = 10) => {
 
   const recentOrders = await prisma.order.findMany({
     where: {
-      userId: userIdCookie!.value,
+      userId: userIdCookie?.value,
     },
     take: limit,
     orderBy: {

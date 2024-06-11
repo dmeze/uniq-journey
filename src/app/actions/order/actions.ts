@@ -143,7 +143,7 @@ export const createOrder = async (orderDetails: {
   const userIdCookie = cookies().get('uuid')
   const orderId = v4()
 
-  if (!userIdCookie || !userIdCookie.value) {
+  if (!userIdCookie || !userIdCookie?.value) {
     throw new Error('User is not authenticated')
   }
 
@@ -174,7 +174,7 @@ export const createOrder = async (orderDetails: {
     prisma.order.create({
       data: {
         id: orderId,
-        userId: userIdCookie.value,
+        userId: userIdCookie?.value,
         total,
         status: 'PENDING',
         createDate: new Date(),
@@ -185,10 +185,10 @@ export const createOrder = async (orderDetails: {
     }),
   ])
 
-  await clearCart(userIdCookie.value)
+  await clearCart(userIdCookie?.value)
   await orderNotification({
     orderId,
-    userId: userIdCookie.value,
+    userId: userIdCookie?.value,
     perfumes: items,
   })
 
