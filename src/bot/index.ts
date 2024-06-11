@@ -1,6 +1,4 @@
-import type { Context, SessionFlavor } from 'grammy'
 import { Bot, InlineKeyboard } from 'grammy'
-import type { ConversationFlavor } from '@grammyjs/conversations'
 import { conversations, createConversation } from '@grammyjs/conversations'
 import type { AromaType } from '@prisma/client'
 
@@ -9,9 +7,7 @@ import { createPerfume } from '@/app/actions/perfume/actions'
 
 const allowedUserIds = JSON.parse(process.env.TELEGRAM_ALLOWED_IDS || '[]')
 
-export const bot = new Bot<Context & ConversationFlavor & SessionFlavor<any>>(
-  process.env.TELEGRAM_BOT_TOKEN as string,
-)
+export const bot = new Bot<any>(process.env.TELEGRAM_BOT_TOKEN as string)
 
 bot.use(conversations())
 
@@ -42,10 +38,7 @@ bot.command('addaroma', async (ctx) => {
   await ctx.reply(response.message)
 })
 
-const addPerfumeConversation = async (
-  conversation: any,
-  ctx: Context & ConversationFlavor & SessionFlavor<any>,
-) => {
+const addPerfumeConversation = async (conversation: any, ctx: any) => {
   await ctx.reply('Please provide the name of the perfume:')
   const nameMessage = await conversation.waitFor('message:text')
   const perfumeName = nameMessage.text
