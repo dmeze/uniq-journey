@@ -40,7 +40,7 @@ const Header = ({ user }: { user: UserProfileProps }) => {
     <header className="bg-white-yellow shadow-md">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="hidden space-x-8 md:flex">
+          <div className="hidden space-x-8 lg:flex">
             {navs.map(({ title, href }) => (
               <Link
                 href={href}
@@ -73,7 +73,7 @@ const Header = ({ user }: { user: UserProfileProps }) => {
           <button
             type="button"
             aria-label="Toggle Navigation"
-            className="flex items-center justify-center rounded-md p-2 text-dark-green hover:text-light-green-200 focus:outline-none md:hidden"
+            className="flex items-center justify-center rounded-md p-2 text-dark-green hover:text-light-green-200 focus:outline-none lg:hidden"
             onClick={() => setIsNavOpen(!isNavOpen)}
           >
             <List size={26} weight="bold" />
@@ -128,7 +128,7 @@ const Header = ({ user }: { user: UserProfileProps }) => {
         </div>
         {isNavOpen && (
           <>
-            <div className="mt-2 flex flex-col space-y-1 md:hidden">
+            <div className="mt-2 flex flex-col space-y-1 lg:hidden">
               {navs.map(({ title, href }) => (
                 <Link
                   key={title}
@@ -140,7 +140,7 @@ const Header = ({ user }: { user: UserProfileProps }) => {
                 </Link>
               ))}
             </div>
-            <div className="mt-2 flex items-center justify-around space-x-1 md:hidden">
+            <div className="mt-2 flex items-center justify-around space-x-1 lg:hidden">
               <div className="flex h-full w-10 cursor-pointer items-center justify-center hover:text-dark-green-300">
                 <MagnifyingGlass size={26} weight="bold" />
               </div>

@@ -69,6 +69,7 @@ export const createCart = async (id: string) => {
     where: {
       id: userIdCookie?.value,
     },
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 
   if (!user) {
@@ -238,6 +239,7 @@ export const createOrAdd = async (data: {
     where: {
       userId: userIdCookie?.value,
     },
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 
   if (!cart) {
@@ -259,6 +261,7 @@ export const migrateCart = async (prevUserId: string, newUserId: string) => {
       where: {
         userId: prevUserId,
       },
+      cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
     })
 
     if (!prevCart) {
@@ -269,6 +272,7 @@ export const migrateCart = async (prevUserId: string, newUserId: string) => {
       where: {
         userId: newUserId,
       },
+      cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
     })
 
     if (existingCart) {
@@ -299,6 +303,7 @@ export const clearCart = async (userId: string) => {
     where: {
       userId,
     },
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 
   if (!cart) {

@@ -1,16 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import type { Order, OrderItem, Perfume, UserPerfume } from '@prisma/client'
 
-interface OrderWithProducts extends Order {
-  products: OrderWithPerfumes[]
-}
-
-interface OrderWithPerfumes extends OrderItem {
-  perfume?: Perfume
-  userPerfume?: UserPerfume
-}
+import type { OrderWithProducts } from '@/app/actions/order/actions'
 
 const OrderHistory = ({ orders }: { orders: OrderWithProducts[] }) => {
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null)

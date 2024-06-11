@@ -84,7 +84,7 @@ const Catalog: React.FC<CatalogProps> = ({
         {perfumes.map((perfume) => (
           <div
             key={perfume.id}
-            className="w-full p-4 sm:w-1/2 md:w-1/3 lg:w-1/4"
+            className="w-full min-w-80 sm:w-1/2 md:w-1/3 lg:w-1/4"
           >
             <Card {...perfume} />
           </div>

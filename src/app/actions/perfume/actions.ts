@@ -50,6 +50,7 @@ export const filterPerfumes = async (aromas: string) => {
         },
       },
     },
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 }
 
@@ -65,6 +66,7 @@ export const getBestSellers = async (limit: number = 10) => {
       },
     },
     take: limit,
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 
   const perfumeIds = orderCounts
@@ -86,6 +88,7 @@ export const getBestSellers = async (limit: number = 10) => {
         },
       },
     },
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 
   return perfumeIds
@@ -121,7 +124,7 @@ export const getRecentPerfumes = async (limit: number = 10) => {
 
   const recentOrders = await prisma.order.findMany({
     where: {
-      userId: userIdCookie!.value,
+      userId: userIdCookie?.value,
     },
     take: limit,
     orderBy: {
@@ -142,6 +145,7 @@ export const getRecentPerfumes = async (limit: number = 10) => {
         },
       },
     },
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 
   const recentPerfumes = recentOrders.flatMap((order) => {
@@ -208,6 +212,7 @@ export const getSimilarPerfumesByAromas = async (
           },
         },
       },
+      cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
     })
 
     const perfumesWithMatchCount = perfumes.map((perfume) => {
@@ -265,6 +270,7 @@ export const getUserMostOrderedPerfumes = async (limit: number = 10) => {
         userId: userIdCookie?.value,
       },
     },
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 
   const perfumeIds = orderCounts
@@ -282,6 +288,7 @@ export const getUserMostOrderedPerfumes = async (limit: number = 10) => {
         },
       },
     },
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 
   const mostOrderedPerfumes = orderCounts
