@@ -1,13 +1,27 @@
-import { Bot, InlineKeyboard } from 'grammy'
+import type { Context } from 'grammy'
+import { Bot, InlineKeyboard, session } from 'grammy'
+import type { Conversation, ConversationFlavor } from '@grammyjs/conversations'
 import { conversations, createConversation } from '@grammyjs/conversations'
 import type { AromaType } from '@prisma/client'
+import type { PhotoSize } from '@grammyjs/types'
 
 import { createAroma, getAromas } from '@/app/actions/aroma/actions'
 import { createPerfume } from '@/app/actions/perfume/actions'
 
 const allowedUserIds = JSON.parse(process.env.TELEGRAM_ALLOWED_IDS || '[]')
 
-export const bot = new Bot<any>(process.env.TELEGRAM_BOT_TOKEN as string)
+type MyContext = Context & ConversationFlavor
+type MyConversation = Conversation<MyContext>
+
+export const bot = new Bot<MyContext>(process.env.TELEGRAM_BOT_TOKEN as string)
+
+bot.use(
+  session({
+    initial() {
+      return {}
+    },
+  }),
+)
 
 bot.use(conversations())
 
@@ -38,20 +52,23 @@ bot.command('addaroma', async (ctx) => {
   await ctx.reply(response.message)
 })
 
-const addPerfumeConversation = async (conversation: any, ctx: any) => {
+const addPerfumeConversation = async (
+  conversation: MyConversation,
+  ctx: MyContext,
+) => {
   await ctx.reply('Please provide the name of the perfume:')
-  const nameMessage = await conversation.waitFor('message:text')
-  const perfumeName = nameMessage.text
+  const {
+    msg: { text: perfumeName },
+  } = await conversation.waitFor('message:text')
 
   await ctx.reply(
     'Please upload images for the perfume (send multiple images):',
   )
-  const imageMessages = await conversation.waitFor('message:photo', 5)
+  const {
+    message: { photo },
+  } = await conversation.waitFor('message:photo')
 
-  const fileIds = imageMessages.map(
-    (imageMessage: { photo: { (): any; new (): any; file_id: any }[] }) =>
-      imageMessage.photo.pop()?.file_id,
-  )
+  const fileIds = photo?.map(({ file_id }: PhotoSize) => file_id)
 
   const imageFiles = await Promise.all(
     fileIds.map((fileId: string) => bot.api.getFile(fileId)),
@@ -73,16 +90,13 @@ const addPerfumeConversation = async (conversation: any, ctx: any) => {
   }[] = []
 
   const handleAromaSelection = async () => {
-    const selection = await conversation.waitFor(
-      'message:text',
-      'callback_query:data',
-    )
+    const { message, callbackQuery } = await conversation.wait()
 
-    if (selection.message?.text === 'done') {
+    if (message?.text === 'done') {
       return
     }
 
-    const aromaSelection = selection.callbackQuery?.data
+    const aromaSelection = callbackQuery?.data
     const selectedAroma = allAromas.find(
       (aroma) => aroma.name === aromaSelection,
     )
@@ -100,10 +114,8 @@ const addPerfumeConversation = async (conversation: any, ctx: any) => {
         reply_markup: noteTypeKeyboard,
       })
 
-      const noteTypeSelection = await conversation.waitFor(
-        'callback_query:data',
-      )
-      const noteType = noteTypeSelection.data as AromaType
+      const { callbackQuery } = await conversation.wait()
+      const noteType = callbackQuery?.data as AromaType
 
       selectedAromas.push({ name: selectedAroma.name, noteType })
       await ctx.reply(
