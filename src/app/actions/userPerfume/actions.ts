@@ -31,6 +31,7 @@ export const createUserPerfume = async ({
 
     let user = await prisma.user.findUnique({
       where: { id: userId },
+      cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
     })
 
     if (!user) {
@@ -64,6 +65,7 @@ export const createUserPerfume = async ({
 
     const aromaRecords = await prisma.aroma.findMany({
       where: { name: { in: aromaNames } },
+      cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
     })
 
     const aromaMap = new Map(

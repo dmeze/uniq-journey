@@ -42,30 +42,15 @@ export const getCurrentUser = async () => {
     where: {
       id: userIdCookie.value,
     },
-    include: {
-      orders: {
-        include: {
-          products: {
-            include: {
-              perfume: {
-                include: {
-                  aromas: true,
-                },
-              },
-              userPerfume: {
-                include: {
-                  aromas: {
-                    include: {
-                      aroma: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      phone: true,
+      city: true,
+      warehouse: true,
     },
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 }
 
@@ -77,6 +62,7 @@ export const loginUser = async (loginData: UserLoginData) => {
       where: {
         email: loginData.email,
       },
+      cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
     })
 
     if (!user) {
@@ -91,7 +77,7 @@ export const loginUser = async (loginData: UserLoginData) => {
         cookies().set('uuid', user.id, { expires: Date.now() + month })
         await migrateCart(userIdCookie?.value!, user.id)
 
-        await revalidatePath('/')
+        revalidatePath('/')
         return { success: true }
       }
     }
@@ -124,6 +110,7 @@ export const updateUser = async (
       'email' in data
         ? await prisma.user.findUnique({
             where: { email: data?.email },
+            cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
           })
         : { name: '' }
 
