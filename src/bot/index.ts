@@ -84,7 +84,7 @@ const addPerfumeConversation = async (conversation: any, ctx: any) => {
 
     const aromaSelection = selection.callbackQuery?.data
     const selectedAroma = allAromas.find(
-      (aroma) => aroma.name === aromaSelection.data,
+      (aroma) => aroma.name === aromaSelection,
     )
 
     if (
@@ -135,4 +135,10 @@ bot.command('addperfume', async (ctx) => {
 
 export const setWebhook = async (url: string) => {
   await bot.api.setWebhook(url)
+}
+
+setWebhook(`${process.env.VERCEL_URL}/api/bot`).catch(console.error)
+
+if (process.env.NODE_ENV !== 'production') {
+  bot.start()
 }
