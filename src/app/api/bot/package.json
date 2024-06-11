@@ -1,6 +1,0 @@
-{
-  "type": "module",
-  "scripts": {
-    "vercel-build": "node ./build.ts"
-  }
-}
