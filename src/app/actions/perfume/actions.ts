@@ -1,7 +1,9 @@
 'use server'
 
-import type { Aroma, Perfume, PerfumeAroma, AromaType } from '@prisma/client'
+import type { Aroma, AromaType, Perfume, PerfumeAroma } from '@prisma/client'
 import { cookies } from 'next/headers'
+import { v4 } from 'uuid'
+import { put } from '@vercel/blob'
 
 import prisma from '@/app/actions'
 
@@ -23,6 +25,70 @@ export const getPerfumes = async () => {
       },
     },
   })
+}
+
+export const createPerfume = async (
+  name: string,
+  images: any[],
+  aromas: {
+    name: string
+    noteType: AromaType
+  }[],
+) => {
+  try {
+    const existingPerfume = await prisma.perfume.findUnique({ where: { name } })
+
+    if (existingPerfume) {
+      return { success: false, message: 'Perfume already exists' }
+    }
+
+    const imageUrls = await Promise.all(
+      images.map(async (image) => {
+        const { url } = await put(`images/perfumes/${name}/${name}`, image, {
+          access: 'public',
+        })
+        return url
+      }),
+    )
+
+    const aromaRecords = await Promise.all(
+      aromas.map(async ({ name, noteType }) => {
+        let aroma = await prisma.aroma.findUnique({
+          where: { name },
+        })
+        if (!aroma) {
+          aroma = await prisma.aroma.create({
+            data: { id: v4(), name },
+          })
+        }
+        return {
+          aroma: {
+            connect: { id: aroma.id },
+          },
+          noteType,
+        }
+      }),
+    )
+
+    await prisma.perfume.create({
+      data: {
+        id: v4(),
+        name,
+        imageURLs: imageUrls,
+        aromas: {
+          create: aromaRecords,
+        },
+      },
+    })
+
+    return { success: true, message: `Perfume ${name} created successfully` }
+  } catch (error) {
+    console.error(error)
+    return {
+      success: false,
+      message: 'An error occurred while creating the perfume',
+    }
+  }
 }
 
 export const filterPerfumes = async (aromas: string) => {
