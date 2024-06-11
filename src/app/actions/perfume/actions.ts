@@ -29,7 +29,7 @@ export const getPerfumes = async () => {
 
 export const createPerfume = async (
   name: string,
-  images: any[],
+  imageFiles: any[],
   aromas: {
     name: string
     noteType: AromaType
@@ -43,7 +43,7 @@ export const createPerfume = async (
     }
 
     const imageUrls = await Promise.all(
-      images.map(async (image) => {
+      imageFiles.map(async (image) => {
         const { url } = await put(`images/perfumes/${name}/${name}`, image, {
           access: 'public',
         })
@@ -52,13 +52,13 @@ export const createPerfume = async (
     )
 
     const aromaRecords = await Promise.all(
-      aromas.map(async ({ name, noteType }) => {
+      aromas.map(async ({ name: aromaName, noteType }) => {
         let aroma = await prisma.aroma.findUnique({
-          where: { name },
+          where: { name: aromaName },
         })
         if (!aroma) {
           aroma = await prisma.aroma.create({
-            data: { id: v4(), name },
+            data: { id: v4(), name: aromaName },
           })
         }
         return {
@@ -83,7 +83,6 @@ export const createPerfume = async (
 
     return { success: true, message: `Perfume ${name} created successfully` }
   } catch (error) {
-    console.error(error)
     return {
       success: false,
       message: 'An error occurred while creating the perfume',

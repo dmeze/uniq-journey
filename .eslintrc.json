@@ -6,6 +6,8 @@
   ],
   "ignorePatterns": ["!src/", "!src/**"],
   "rules": {
+    "no-await-in-loop": "off",
+    "no-continue": "off",
     "jsx-a11y/label-has-associated-control": [ 2, {
       "controlComponents": [],
       "depth": 3,

@@ -54,15 +54,14 @@ const addPerfumeConversation = async (
     'Please upload images for the perfume (send multiple images):',
   )
   const imageMessages = await conversation.waitFor('message:photo', 5)
-  const images = await Promise.all(
-    imageMessages.map(
-      async (imageMessage: {
-        photo: { (): any; new (): any; file_id: any }[]
-      }) => {
-        const fileId = imageMessage.photo.pop()?.file_id
-        return bot.api.getFile(fileId!)
-      },
-    ),
+
+  const fileIds = imageMessages.map(
+    (imageMessage: { photo: { (): any; new (): any; file_id: any }[] }) =>
+      imageMessage.photo.pop()?.file_id,
+  )
+
+  const imageFiles = await Promise.all(
+    fileIds.map((fileId: string) => bot.api.getFile(fileId)),
   )
 
   const allAromas = await getAromas()
@@ -80,8 +79,15 @@ const addPerfumeConversation = async (
     noteType: AromaType
   }[] = []
 
+  const aromaSelections = new Set<string>()
+
   while (selectedAromas.length < allAromas.length) {
     const aromaSelection = await conversation.waitFor('callback_query:data')
+    if (aromaSelections.has(aromaSelection.data)) {
+      continue
+    }
+    aromaSelections.add(aromaSelection.data)
+
     const selectedAroma = allAromas.find(
       (aroma) => aroma.name === aromaSelection.data,
     )
@@ -98,7 +104,7 @@ const addPerfumeConversation = async (
       const noteTypeSelection = await conversation.waitFor(
         'callback_query:data',
       )
-      const noteType = noteTypeSelection.data
+      const noteType = noteTypeSelection.data as AromaType
 
       selectedAromas.push({ name: selectedAroma.name, noteType })
       await ctx.reply(
@@ -107,7 +113,7 @@ const addPerfumeConversation = async (
     }
   }
 
-  const response = await createPerfume(perfumeName, images, selectedAromas)
+  const response = await createPerfume(perfumeName, imageFiles, selectedAromas)
   await ctx.reply(response.message)
 }
 
