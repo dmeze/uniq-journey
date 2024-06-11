@@ -134,7 +134,7 @@ const addPerfumeConversation = async (
   await ctx.reply(response.message)
 }
 
-bot.use(createConversation(addPerfumeConversation))
+bot.use(createConversation(addPerfumeConversation, 'add-perfume'))
 
 bot.command('addperfume', async (ctx) => {
   if (!allowedUserIds.includes(ctx.from?.id!)) {
@@ -142,14 +142,12 @@ bot.command('addperfume', async (ctx) => {
     return
   }
 
-  await ctx.conversation.enter('addPerfumeConversation')
+  await ctx.conversation.enter('add-perfume')
 })
 
 export const setWebhook = async (url: string) => {
   await bot.api.setWebhook(url)
 }
-
-setWebhook(`${process.env.VERCEL_URL}/api/bot`).catch(console.error)
 
 if (process.env.NODE_ENV !== 'production') {
   bot.start()
