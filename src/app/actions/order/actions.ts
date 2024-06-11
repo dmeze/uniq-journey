@@ -2,6 +2,7 @@
 
 import { v4 } from 'uuid'
 import { cookies } from 'next/headers'
+import type { Order, OrderItem, Perfume, UserPerfume } from '@prisma/client'
 
 import prisma from '@/app/actions'
 import { clearCart } from '@/app/actions/cart/actions'
@@ -27,6 +28,46 @@ export interface OrderPerfumeItems {
   aromas: { noteType: string; aroma: { name: string } }[]
 }
 
+export interface OrderWithProducts extends Order {
+  products: OrderWithPerfumes[]
+}
+
+interface OrderWithPerfumes extends OrderItem {
+  perfume?: Perfume
+  userPerfume?: UserPerfume
+}
+
+export const getOrderByUserId = async () => {
+  const userIdCookie = cookies().get('uuid')
+
+  return prisma.order.findMany({
+    where: {
+      userId: userIdCookie?.value,
+    },
+    include: {
+      products: {
+        include: {
+          perfume: {
+            include: {
+              aromas: true,
+            },
+          },
+          userPerfume: {
+            include: {
+              aromas: {
+                include: {
+                  aroma: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    cacheStrategy: { ttl: 3000, swr: 3000 },
+  })
+}
+
 export const orderNotification = async ({
   orderId,
   userId,
@@ -40,6 +81,7 @@ export const orderNotification = async ({
     where: {
       id: userId,
     },
+    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 
   if (!user) {
@@ -101,7 +143,7 @@ export const createOrder = async (orderDetails: {
   const userIdCookie = cookies().get('uuid')
   const orderId = v4()
 
-  if (!userIdCookie || !userIdCookie.value) {
+  if (!userIdCookie || !userIdCookie?.value) {
     throw new Error('User is not authenticated')
   }
 
@@ -132,7 +174,7 @@ export const createOrder = async (orderDetails: {
     prisma.order.create({
       data: {
         id: orderId,
-        userId: userIdCookie.value,
+        userId: userIdCookie?.value,
         total,
         status: 'PENDING',
         createDate: new Date(),
@@ -143,10 +185,10 @@ export const createOrder = async (orderDetails: {
     }),
   ])
 
-  await clearCart(userIdCookie.value)
+  await clearCart(userIdCookie?.value)
   await orderNotification({
     orderId,
-    userId: userIdCookie.value,
+    userId: userIdCookie?.value,
     perfumes: items,
   })
 

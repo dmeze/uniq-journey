@@ -6,6 +6,8 @@ import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/app/actions/user/actions'
 import UserProfile from '@/components/Profile/UserProfile'
 import OrderHistory from '@/components/Profile/OrderHistory'
+import type { OrderWithProducts } from '@/app/actions/order/actions'
+import { getOrderByUserId } from '@/app/actions/order/actions'
 
 export interface UserProfileProps extends User {
   orders: (Order & { products: (OrderItem & { perfume: Perfume })[] })[]
@@ -13,6 +15,7 @@ export interface UserProfileProps extends User {
 
 const Profile = async () => {
   const user = (await getCurrentUser()) as unknown as UserProfileProps
+  const orders = (await getOrderByUserId()) as unknown as OrderWithProducts[]
 
   if (!user?.name) redirect('/')
 
@@ -23,7 +26,7 @@ const Profile = async () => {
           <UserProfile user={user} />
         </div>
         <div className="w-full px-4 lg:w-1/2">
-          <OrderHistory orders={user.orders} />
+          <OrderHistory orders={orders} />
         </div>
       </div>
     </div>
