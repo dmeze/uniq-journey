@@ -1,10 +1,13 @@
-import { Bot, webhookCallback } from 'grammy'
+import { webhookCallback } from 'grammy'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
+import { bot } from '@/bot'
 
-const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN as string)
+export const POST = async (request: NextRequest) => {
+  const handler = webhookCallback(bot, 'std/http')
+  return handler(request)
+}
 
-bot.command('start', (ctx) => ctx.reply('Welcome! Up and running.'))
-bot.on('message', (ctx) => ctx.reply('Got another message!'))
-
-export async function POST() {
-  webhookCallback(bot, 'std/http')
+export async function GET() {
+  return NextResponse.json({ status: 'Bot is running' })
 }
