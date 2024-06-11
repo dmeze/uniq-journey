@@ -1,5 +1,6 @@
 import { Bot } from 'grammy'
 import { v4 } from 'uuid'
+import { NextResponse } from 'next/server'
 
 import prisma from '@/app/actions'
 
@@ -92,4 +93,23 @@ bot.command('addAroma', async (ctx) => {
   ctx.reply(response.message)
 })
 
-bot.start()
+const setWebhook = async () => {
+  const url = `${process.env.VERCEL_URL}/api/bot`
+  await bot.api.setWebhook(url)
+}
+
+setWebhook()
+
+export async function POST(request: Request) {
+  try {
+    const update = await request.json()
+    await bot.handleUpdate(update)
+    return NextResponse.json({ status: 'ok' })
+  } catch (error) {
+    return NextResponse.json({ status: 'error', error })
+  }
+}
+
+export async function GET() {
+  return NextResponse.json({ status: 'Bot is running' })
+}
