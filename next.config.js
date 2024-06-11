@@ -3,6 +3,9 @@ const withNextIntl = require('next-intl/plugin')()
 
 module.exports = withNextIntl({
   reactStrictMode: false,
+  experimental: {
+    serverComponentsExternalPackages: ['grammy'],
+  },
   images: {
     remotePatterns: [
       {
