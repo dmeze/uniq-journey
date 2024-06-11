@@ -74,7 +74,7 @@ bot.command('start', (ctx) => {
   )
 })
 
-bot.command('addPerfume', async (ctx) => {
+bot.command('addperfume', async (ctx) => {
   const text = ctx.message?.text.split(' ').slice(1)
   const name = text ? text[0] : ''
   const aromaNames = text?.slice(1).join(' ').split(',') || []
@@ -83,7 +83,7 @@ bot.command('addPerfume', async (ctx) => {
   ctx.reply(response.message)
 })
 
-bot.command('addAroma', async (ctx) => {
+bot.command('addaroma', async (ctx) => {
   const name = ctx.message?.text.split(' ').slice(1).join(' ')
 
   const response = await addAroma(name as string)
