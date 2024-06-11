@@ -79,19 +79,25 @@ const addPerfumeConversation = async (
     noteType: AromaType
   }[] = []
 
-  const aromaSelections = new Set<string>()
+  const handleAromaSelection = async () => {
+    const selection = await conversation.waitFor(
+      'message:text',
+      'callback_query:data',
+    )
 
-  while (selectedAromas.length < allAromas.length) {
-    const aromaSelection = await conversation.waitFor('callback_query:data')
-    if (aromaSelections.has(aromaSelection.data)) {
-      continue
+    if (selection.message?.text === 'done') {
+      return
     }
-    aromaSelections.add(aromaSelection.data)
 
+    const aromaSelection = selection.callbackQuery?.data
     const selectedAroma = allAromas.find(
       (aroma) => aroma.name === aromaSelection.data,
     )
-    if (selectedAroma) {
+
+    if (
+      selectedAroma &&
+      !selectedAromas.find((a) => a.name === selectedAroma.name)
+    ) {
       const noteTypeKeyboard = new InlineKeyboard()
       noteTypeKeyboard.text('HIGH', 'HIGH').row()
       noteTypeKeyboard.text('MIDDLE', 'MIDDLE').row()
@@ -111,7 +117,13 @@ const addPerfumeConversation = async (
         `Aroma ${selectedAroma.name} with note type ${noteType} added. You can select more or type 'done' to finish.`,
       )
     }
+
+    if (selectedAromas.length < allAromas.length) {
+      await handleAromaSelection()
+    }
   }
+
+  await handleAromaSelection()
 
   const response = await createPerfume(perfumeName, imageFiles, selectedAromas)
   await ctx.reply(response.message)
