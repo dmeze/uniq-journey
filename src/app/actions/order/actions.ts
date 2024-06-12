@@ -48,11 +48,7 @@ export const getOrders = async () => {
     include: {
       products: {
         include: {
-          perfume: {
-            include: {
-              aromas: true,
-            },
-          },
+          perfume: true,
           userPerfume: {
             include: {
               aromas: {
@@ -64,6 +60,7 @@ export const getOrders = async () => {
           },
         },
       },
+      user: true,
     },
     cacheStrategy: { ttl: 1500, swr: 1500 },
   })

@@ -4,10 +4,9 @@ import type { AromaType } from '@prisma/client'
 
 import type { MyContext, MyConversation } from '@/bot'
 
-export const downloadFile = async (url: string) => {
+export const downloadFile = async (url: string): Promise<ArrayBuffer> => {
   const response = await axios.get(url, { responseType: 'arraybuffer' })
-
-  return Buffer.from(response.data, 'binary')
+  return response.data
 }
 
 export const handlePhotoUpload = async (
@@ -17,7 +16,10 @@ export const handlePhotoUpload = async (
 ) => {
   await ctx.reply('Please upload images for the perfume:')
   const { message } = await conversation.waitFor('message:photo')
-  const largestPhoto = message.photo.pop()
+
+  const largestPhoto = message.photo.reduce((prev, current) => {
+    return (prev.file_size || 0) > (current.file_size || 0) ? prev : current
+  })
 
   if (largestPhoto) {
     fileIds.push(largestPhoto.file_id)
