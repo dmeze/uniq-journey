@@ -95,18 +95,17 @@ export const handleAromaSelection = async (
         `Aroma ${selectedAroma.name} with note type ${noteType} added. You can select more or proceed.`,
       )
     }
+  }
+  const continueKeyboard = new InlineKeyboard()
+    .text('Add more aromas', 'add_more_aromas')
+    .text('Proceed', 'proceed')
 
-    const continueKeyboard = new InlineKeyboard()
-      .text('Add more aromas', 'add_more_aromas')
-      .text('Proceed', 'proceed')
+  await ctx.reply('Would you like to add more aromas or proceed?', {
+    reply_markup: continueKeyboard,
+  })
 
-    await ctx.reply('Would you like to add more aromas or proceed?', {
-      reply_markup: continueKeyboard,
-    })
-
-    const { callbackQuery: aromasContinueCallback } = await conversation.wait()
-    if (aromasContinueCallback?.data === 'add_more_aromas') {
-      await handleAromaSelection(conversation, allAromas, selectedAromas, ctx)
-    }
+  const { callbackQuery: aromasContinueCallback } = await conversation.wait()
+  if (aromasContinueCallback?.data === 'add_more_aromas') {
+    await handleAromaSelection(conversation, allAromas, selectedAromas, ctx)
   }
 }
