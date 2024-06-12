@@ -41,12 +41,13 @@ export const getAromaKeyboard = (
   selectedAromas: { name: string; noteType: AromaType }[],
 ) => {
   const aromaKeyboard = new InlineKeyboard()
+
   allAromas.forEach((aroma) => {
     const isSelected = selectedAromas.some((a) => a.name === aroma.name)
     const buttonText = isSelected ? `${aroma.name} ✅` : aroma.name
     aromaKeyboard.text(buttonText, aroma.name).row()
   })
-  aromaKeyboard.text('Submit Selections', 'submit_selections').row()
+
   return aromaKeyboard
 }
 
@@ -63,9 +64,6 @@ export const handleAromaSelection = async (
   const { callbackQuery } = await conversation.wait()
 
   const aromaSelection = callbackQuery?.data
-  if (aromaSelection === 'submit_selections') {
-    return
-  }
 
   const selectedAroma = allAromas.find((aroma) => aroma.name === aromaSelection)
   if (selectedAroma) {
@@ -97,7 +95,18 @@ export const handleAromaSelection = async (
         `Aroma ${selectedAroma.name} with note type ${noteType} added. You can select more or proceed.`,
       )
     }
-  }
 
-  await handleAromaSelection(conversation, allAromas, selectedAromas, ctx)
+    const continueKeyboard = new InlineKeyboard()
+      .text('Add more aromas', 'add_more_aromas')
+      .text('Proceed', 'proceed')
+
+    await ctx.reply('Would you like to add more aromas or proceed?', {
+      reply_markup: continueKeyboard,
+    })
+
+    const { callbackQuery: aromasContinueCallback } = await conversation.wait()
+    if (aromasContinueCallback?.data === 'add_more_aromas') {
+      await handleAromaSelection(conversation, allAromas, selectedAromas, ctx)
+    }
+  }
 }
