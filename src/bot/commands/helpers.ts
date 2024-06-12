@@ -99,5 +99,5 @@ export const handleAromaSelection = async (
     }
   }
 
-  handleAromaSelection(conversation, allAromas, selectedAromas, ctx)
+  await handleAromaSelection(conversation, allAromas, selectedAromas, ctx)
 }
