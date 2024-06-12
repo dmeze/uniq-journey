@@ -4,8 +4,13 @@ import type { AromaType } from '@prisma/client'
 
 import type { MyContext, MyConversation } from '@/bot'
 
-export const downloadFile = async (url: string) => {
-  const response = await axios.get(url, { responseType: 'arraybuffer' })
+export const downloadFile = async (
+  url: string,
+  conversation: MyConversation,
+) => {
+  const response = await conversation.external(async () =>
+    axios.get(url, { responseType: 'arraybuffer' }),
+  )
   return Buffer.from(response.data, 'binary')
 }
 
@@ -96,6 +101,7 @@ export const handleAromaSelection = async (
       )
     }
   }
+
   const continueKeyboard = new InlineKeyboard()
     .text('Add more aromas', 'add_more_aromas')
     .text('Proceed', 'proceed')
