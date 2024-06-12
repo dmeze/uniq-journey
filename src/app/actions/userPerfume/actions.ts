@@ -6,6 +6,7 @@ import { v4 } from 'uuid'
 import { put } from '@vercel/blob'
 
 import prisma from '@/app/actions'
+import { ONE_DAY_CACHE, ONE_MONTH_CACHE } from '@/constants'
 
 export const getUserPerfumes = async () => {
   return prisma.userPerfume.findMany()
@@ -31,7 +32,7 @@ export const createUserPerfume = async ({
 
     let user = await prisma.user.findUnique({
       where: { id: userId },
-      cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
+      cacheStrategy: { swr: ONE_DAY_CACHE },
     })
 
     if (!user) {
@@ -65,7 +66,7 @@ export const createUserPerfume = async ({
 
     const aromaRecords = await prisma.aroma.findMany({
       where: { name: { in: aromaNames } },
-      cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
+      cacheStrategy: { swr: ONE_MONTH_CACHE },
     })
 
     const aromaMap = new Map(

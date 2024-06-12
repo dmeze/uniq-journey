@@ -6,6 +6,7 @@ import { v4 } from 'uuid'
 import { put } from '@vercel/blob'
 
 import prisma from '@/app/actions'
+import { ONE_HOUR_CACHE, ONE_MONTH_CACHE } from '@/constants'
 
 export interface PerfumeAromaWithAroma extends PerfumeAroma {
   aroma: Aroma
@@ -51,7 +52,6 @@ export const getPerfumeById = async (id: string) => {
         },
       },
     },
-    cacheStrategy: { ttl: 60 * 60 * 24 * 15, swr: 60 * 60 * 24 * 15 },
   })
 }
 
@@ -185,7 +185,7 @@ export const filterPerfumes = async (aromas: string) => {
         },
       },
     },
-    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
+    cacheStrategy: { ttl: ONE_MONTH_CACHE },
   })
 }
 
@@ -223,7 +223,7 @@ export const getBestSellers = async (limit: number = 10) => {
         },
       },
     },
-    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
+    cacheStrategy: { swr: ONE_HOUR_CACHE },
   })
 
   return perfumeIds
@@ -280,7 +280,7 @@ export const getRecentPerfumes = async (limit: number = 10) => {
         },
       },
     },
-    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
+    cacheStrategy: { swr: ONE_HOUR_CACHE },
   })
 
   const recentPerfumes = recentOrders.flatMap((order) => {
@@ -347,7 +347,7 @@ export const getSimilarPerfumesByAromas = async (
           },
         },
       },
-      cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
+      cacheStrategy: { ttl: ONE_MONTH_CACHE },
     })
 
     const perfumesWithMatchCount = perfumes.map((perfume) => {
@@ -405,7 +405,7 @@ export const getUserMostOrderedPerfumes = async (limit: number = 10) => {
         userId: userIdCookie?.value,
       },
     },
-    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
+    cacheStrategy: { swr: ONE_HOUR_CACHE },
   })
 
   const perfumeIds = orderCounts
@@ -423,7 +423,7 @@ export const getUserMostOrderedPerfumes = async (limit: number = 10) => {
         },
       },
     },
-    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
+    cacheStrategy: { swr: ONE_MONTH_CACHE },
   })
 
   const mostOrderedPerfumes = orderCounts

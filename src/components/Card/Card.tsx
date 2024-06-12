@@ -50,7 +50,6 @@ const Card = ({ imageURLs, name, id }: CardProps) => {
         },
         error: `Failed to add ${name} to cart. Please, try again.`,
       },
-      { toastId: 'add-to-cart' },
     )
   }
 

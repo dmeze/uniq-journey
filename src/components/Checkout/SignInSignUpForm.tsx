@@ -24,7 +24,7 @@ const SignInSignUpForm = ({
   submitAction?: () => void
 }) => {
   const [activeTab, setActiveTab] = useState('new')
-  const { startTransition } = useContext(PageLoaderContext)!
+  const { startTransition, isPending } = useContext(PageLoaderContext)!
 
   const handleUserFormAction = async (
     formData: UserInformationData | UserLoginData,
@@ -71,6 +71,7 @@ const SignInSignUpForm = ({
         {...formProps}
         action={handleUserFormAction}
         initialValues={{}}
+        isPending={isPending}
         submitText="Next"
       />
     </>

@@ -1,5 +1,12 @@
-import ProfileContainer from '@/containers/Profile'
+import { Suspense } from 'react'
 
-const Profile = () => <ProfileContainer />
+import ProfileContainer from '@/containers/Profile'
+import PageLoader from '@/components/Loaders/PageLoader'
+
+const Profile = () => (
+  <Suspense fallback={<PageLoader />}>
+    <ProfileContainer />
+  </Suspense>
+)
 
 export default Profile

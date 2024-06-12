@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { InlineKeyboard } from 'grammy'
 import type { AromaType } from '@prisma/client'
-import { put } from '@vercel/blob'
 
 import type { MyContext, MyConversation } from '@/bot'
 import { type Aroma, getAromas } from '@/app/actions/aroma/actions'
@@ -151,22 +150,14 @@ export const editPerfumeDetails = async (
     const fileIds: string[] = []
     await handlePhotoUpload(conversation, ctx, fileIds)
 
-    const newImageFiles = await Promise.all(
+    perfume.imageURLs = await Promise.all(
       fileIds.map(async (fileId: string) => {
         const file = await ctx.api.getFile(fileId)
         const downloadUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`
 
-        return put(
-          `images/userPerfumes/${perfume.name}/${perfume.name}`,
-          await downloadFile(downloadUrl),
-          {
-            access: 'public',
-          },
-        ).then(({ url }) => url)
+        return downloadFile(downloadUrl)
       }),
     )
-
-    perfume.imageURLs.push(...newImageFiles)
   }
 
   if (editCallback?.data === 'remove_photos') {
