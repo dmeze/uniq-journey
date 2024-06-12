@@ -2,6 +2,7 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import { isEmpty } from 'lodash'
+import { useTranslations } from 'next-intl'
 
 import Card from '@/components/Card'
 import DescriptionCard from '@/components/Card/DescriptionCard'
@@ -24,6 +25,7 @@ const Content: React.FC<ContentProps> = ({
   currentPerfume,
   similarCounts,
 }) => {
+  const t = useTranslations('Perfume')
   const [selectedAromas, setSelectedAromas] = useState<Set<string>>(new Set())
   const [displayedPerfumes, setDisplayedPerfumes] = useState(filteredPerfumes)
   const [displayedSimilarCounts, setDisplayedSimilarCounts] =
@@ -73,6 +75,7 @@ const Content: React.FC<ContentProps> = ({
           <div className="flex-1">
             <DescriptionCard
               name={currentPerfume.name}
+              description={t(`description.${currentPerfume.name}`)}
               imageURLs={currentPerfume.imageURLs}
               aromas={currentPerfume.aromas}
               onAromaClick={handleAromaClick}

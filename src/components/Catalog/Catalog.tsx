@@ -3,6 +3,7 @@
 import React, { useContext } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { X } from 'phosphor-react'
+import { useTranslations } from 'next-intl'
 
 import Card from '@/components/Card'
 import type { AromaWithCount } from '@/app/actions/aroma/actions'
@@ -23,6 +24,7 @@ const Catalog: React.FC<CatalogProps> = ({
 }) => {
   const pathname = usePathname()
   const router = useRouter()
+  const t = useTranslations('Aroma')
   const { startTransition, isPending } = useContext(PageLoaderContext)!
 
   const toggleAroma = (aroma: string) => {
@@ -63,7 +65,7 @@ const Catalog: React.FC<CatalogProps> = ({
                 key={aroma}
                 className="m-1 flex items-center rounded-full bg-light-green-100 px-3 py-1 text-sm font-medium text-white"
               >
-                {aroma}
+                {t(`title.${aroma}`)}
                 <button
                   disabled={isPending}
                   type="button"

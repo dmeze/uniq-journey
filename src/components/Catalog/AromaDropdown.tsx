@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Funnel } from 'phosphor-react'
+import { useTranslations } from 'next-intl'
 
 interface AromaDropdownProps {
   aromas: { name: string; count: number }[]
@@ -14,6 +15,7 @@ const AromaDropdown: React.FC<AromaDropdownProps> = ({
   toggleAroma,
   isPending,
 }) => {
+  const t = useTranslations('Aroma')
   const [isDropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -57,13 +59,10 @@ const AromaDropdown: React.FC<AromaDropdownProps> = ({
         <div className="absolute left-0 z-50 mt-2 w-64 bg-white shadow-lg">
           <ul className="max-h-[400px] overflow-y-auto">
             {sortedAromas.map((aroma) => (
-              <li
-                key={aroma.name}
-                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-              >
+              <li key={aroma.name} className="px-4 py-2 hover:bg-gray-100">
                 <label
                   htmlFor={aroma.name}
-                  className="flex items-center space-x-2"
+                  className="flex cursor-pointer items-center space-x-2"
                 >
                   <input
                     id={aroma.name}
@@ -79,7 +78,7 @@ const AromaDropdown: React.FC<AromaDropdownProps> = ({
                         : 'text-dark-green-300'
                     }`}
                   >
-                    {aroma.name}
+                    {t(`title.${aroma.name}`)}
                   </span>
                   <span className="ml-2 text-sm text-dark-green-300">
                     ({aroma.count})

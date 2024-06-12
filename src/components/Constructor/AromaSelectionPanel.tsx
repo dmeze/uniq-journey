@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { Aroma } from '@prisma/client'
 import { toast } from 'react-toastify'
+import { useTranslations } from 'next-intl'
 
 import { getColorMap, getLabels } from '@/components/Constructor/helpers'
 import { PageLoaderContext } from '@/providers/PageLoaderProvider'
@@ -23,9 +24,10 @@ const AromaSelectionPanel = ({
   middleNotes,
   topNotes,
 }: AromaSelectionPanelProps) => {
-  const searchParams = useSearchParams()
-  const router = useRouter()
   const pathname = usePathname()
+  const router = useRouter()
+  const t = useTranslations('Aroma')
+  const searchParams = useSearchParams()
   const { startTransition } = useContext(PageLoaderContext)!
 
   const colorMap = getColorMap(baseNotes, middleNotes, topNotes)
@@ -74,8 +76,8 @@ const AromaSelectionPanel = ({
           return (
             <AromaButton
               key={name}
-              name={name}
-              description="Test"
+              name={t(`title.${name}`)}
+              description={t(`description.${name}`)}
               isSelected={isSelected}
               labels={labels}
               color={color}

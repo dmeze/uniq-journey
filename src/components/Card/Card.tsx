@@ -55,7 +55,7 @@ const Card = ({ imageURLs, name, id }: CardProps) => {
 
   return (
     <div className="mx-5 my-2.5 min-h-[450px] overflow-hidden rounded-lg bg-white transition-shadow duration-300 hover:shadow-xl">
-      <div className="relative h-64">
+      <div className="relative h-72 w-full">
         <Image
           priority
           src={imageURLs[0]}
