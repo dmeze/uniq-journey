@@ -29,14 +29,12 @@ export const addPerfumeConversation = async (
 
   await handleAromaSelection(conversation, allAromas, selectedAromas, ctx)
 
-  const imageFiles = await conversation.external(async () =>
-    Promise.all(
-      fileIds.map(async (fileId: string) => {
-        const file = await ctx.api.getFile(fileId)
-        const downloadUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`
-        return downloadFile(downloadUrl, conversation)
-      }),
-    ),
+  const imageFiles = await Promise.all(
+    fileIds.map(async (fileId: string) => {
+      const file = await ctx.api.getFile(fileId)
+      const downloadUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`
+      return downloadFile(downloadUrl)
+    }),
   )
 
   const response = await conversation.external(async () =>

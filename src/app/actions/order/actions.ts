@@ -2,7 +2,13 @@
 
 import { v4 } from 'uuid'
 import { cookies } from 'next/headers'
-import type { Order, OrderItem, Perfume, UserPerfume } from '@prisma/client'
+import type {
+  Order,
+  OrderItem,
+  OrderStatus,
+  Perfume,
+  UserPerfume,
+} from '@prisma/client'
 
 import prisma from '@/app/actions'
 import { clearCart } from '@/app/actions/cart/actions'
@@ -35,6 +41,32 @@ export interface OrderWithProducts extends Order {
 interface OrderWithPerfumes extends OrderItem {
   perfume?: Perfume
   userPerfume?: UserPerfume
+}
+
+export const getOrders = async () => {
+  return prisma.order.findMany({
+    include: {
+      products: {
+        include: {
+          perfume: {
+            include: {
+              aromas: true,
+            },
+          },
+          userPerfume: {
+            include: {
+              aromas: {
+                include: {
+                  aroma: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    cacheStrategy: { ttl: 1500, swr: 1500 },
+  })
 }
 
 export const getOrderByUserId = async () => {
@@ -193,4 +225,23 @@ export const createOrder = async (orderDetails: {
   })
 
   return { success: true }
+}
+
+export const updateOrderStatus = async (
+  orderId: string,
+  status: OrderStatus,
+) => {
+  try {
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status },
+    })
+
+    return { success: true, message: `Order status updated to ${status}.` }
+  } catch (error) {
+    return {
+      success: false,
+      message: 'An error occurred while updating the status',
+    }
+  }
 }

@@ -5,6 +5,7 @@ import { conversations, createConversation } from '@grammyjs/conversations'
 
 import { addPerfumeConversation } from '@/bot/commands/addPerfume'
 import { addAroma } from '@/bot/commands/addAroma'
+import { updateOrderStatusConversation } from '@/bot/commands/listOrders'
 
 export const allowedUserIds = JSON.parse(
   process.env.TELEGRAM_ALLOWED_IDS || '[]',
@@ -44,6 +45,19 @@ bot.command('addperfume', async (ctx) => {
   }
 
   await ctx.conversation.enter('add-perfume')
+})
+
+bot.use(
+  createConversation(updateOrderStatusConversation, 'update-order-status'),
+)
+
+bot.command('listorders', async (ctx) => {
+  if (!allowedUserIds.includes(ctx.from?.id!)) {
+    await ctx.reply('You are not authorized to use this bot.')
+    return
+  }
+
+  await ctx.conversation.enter('update-order-status')
 })
 
 export const setWebhook = async (url: string) => {

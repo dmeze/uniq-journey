@@ -83,7 +83,7 @@ model Order {
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   total      Int
   products   OrderItem[]
-  status     String
+  status     OrderStatus @default(PENDING)
   createDate DateTime    @default(now())
 }
 
@@ -110,8 +110,8 @@ model Aroma {
 }
 
 model PerfumeAroma {
-  perfume   Perfume   @relation(fields: [perfumeId], references: [id])
-  aroma     Aroma     @relation(fields: [aromaId], references: [id])
+  perfume   Perfume   @relation(fields: [perfumeId], references: [id], onDelete: Cascade)
+  aroma     Aroma     @relation(fields: [aromaId], references: [id], onDelete: Cascade)
   noteType  AromaType
   perfumeId String    @db.Uuid
   aromaId   String    @db.Uuid
@@ -123,4 +123,10 @@ enum AromaType {
   HIGH
   MIDDLE
   BASE
+}
+
+enum OrderStatus {
+  PENDING
+  SHIPPING
+  DONE
 }
