@@ -14,9 +14,36 @@ export interface PerfumeAromaWithAroma extends PerfumeAroma {
 export interface PerfumeWithAromas extends Perfume {
   aromas: PerfumeAromaWithAroma[]
 }
-
 export const getPerfumes = async () => {
-  return prisma.perfume.findMany({
+  return prisma.perfume.findMany()
+}
+
+const getOrCreateAromas = async (
+  aromas: { name: string; noteType: AromaType }[],
+) => {
+  return Promise.all(
+    aromas.map(async ({ name: aromaName, noteType }) => {
+      let aroma = await prisma.aroma.findUnique({
+        where: { name: aromaName },
+      })
+      if (!aroma) {
+        aroma = await prisma.aroma.create({
+          data: { id: v4(), name: aromaName },
+        })
+      }
+      return {
+        aroma: {
+          connect: { id: aroma.id },
+        },
+        noteType,
+      }
+    }),
+  )
+}
+
+export const getPerfumeById = async (id: string) => {
+  return prisma.perfume.findUnique({
+    where: { id },
     include: {
       aromas: {
         include: {
@@ -24,6 +51,7 @@ export const getPerfumes = async () => {
         },
       },
     },
+    cacheStrategy: { ttl: 60 * 60 * 24 * 15, swr: 60 * 60 * 24 * 15 },
   })
 }
 
@@ -51,24 +79,7 @@ export const createPerfume = async (
       }),
     )
 
-    const aromaRecords = await Promise.all(
-      aromas.map(async ({ name: aromaName, noteType }) => {
-        let aroma = await prisma.aroma.findUnique({
-          where: { name: aromaName },
-        })
-        if (!aroma) {
-          aroma = await prisma.aroma.create({
-            data: { id: v4(), name: aromaName },
-          })
-        }
-        return {
-          aroma: {
-            connect: { id: aroma.id },
-          },
-          noteType,
-        }
-      }),
-    )
+    const aromaRecords = await getOrCreateAromas(aromas)
 
     await prisma.perfume.create({
       data: {
@@ -86,6 +97,58 @@ export const createPerfume = async (
     return {
       success: false,
       message: 'An error occurred while creating the perfume',
+    }
+  }
+}
+
+export const updatePerfume = async (
+  id: string,
+  name: string,
+  imageFiles: any[],
+  aromas: {
+    name: string
+    noteType: AromaType
+  }[],
+) => {
+  try {
+    const existingPerfume = await prisma.perfume.findUnique({ where: { id } })
+
+    if (!existingPerfume) {
+      return { success: false, message: 'Perfume not found' }
+    }
+
+    const imageUrls = await Promise.all(
+      imageFiles.map(async (image, index) => {
+        const { url } = await put(
+          `images/perfumes/${name}/${name}_${index}`,
+          image,
+          {
+            access: 'public',
+          },
+        )
+        return url
+      }),
+    )
+
+    const aromaRecords = await getOrCreateAromas(aromas)
+
+    await prisma.perfume.update({
+      where: { id },
+      data: {
+        name,
+        imageURLs: imageUrls,
+        aromas: {
+          deleteMany: {},
+          create: aromaRecords,
+        },
+      },
+    })
+
+    return { success: true, message: `Perfume ${name} updated successfully` }
+  } catch (error) {
+    return {
+      success: false,
+      message: 'An error occurred while updating the perfume',
     }
   }
 }

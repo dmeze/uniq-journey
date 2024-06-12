@@ -7,6 +7,7 @@ import { addPerfumeConversation } from '@/bot/commands/addPerfume'
 import { addAroma } from '@/bot/commands/addAroma'
 import { updateOrderStatusConversation } from '@/bot/commands/changeStatus'
 import { getOrdersList } from '@/bot/commands/listorders'
+import { editPerfumeConversation } from '@/bot/commands/editPerfume'
 
 export const allowedUserIds = JSON.parse(
   process.env.TELEGRAM_ALLOWED_IDS || '[]',
@@ -38,6 +39,7 @@ bot.command('start', async (ctx) => {
 bot.command('addaroma', (ctx) => addAroma(ctx, allowedUserIds))
 
 bot.use(createConversation(addPerfumeConversation, 'add-perfume'))
+bot.use(createConversation(editPerfumeConversation, 'edit-perfume'))
 
 bot.command('addperfume', async (ctx) => {
   if (!allowedUserIds.includes(ctx.from?.id!)) {
@@ -46,6 +48,15 @@ bot.command('addperfume', async (ctx) => {
   }
 
   await ctx.conversation.enter('add-perfume')
+})
+
+bot.command('editperfume', async (ctx) => {
+  if (!allowedUserIds.includes(ctx.from?.id!)) {
+    await ctx.reply('You are not authorized to use this bot.')
+    return
+  }
+
+  await ctx.conversation.enter('edit-perfume')
 })
 
 bot.use(
