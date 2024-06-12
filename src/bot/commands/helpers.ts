@@ -48,3 +48,64 @@ export const getAromaKeyboard = (
   })
   return aromaKeyboard
 }
+
+export const handleAromaSelection = async (
+  conversation: MyConversation,
+  allAromas: { id: string; name: string }[],
+  selectedAromas: { name: string; noteType: AromaType }[],
+  ctx: MyContext,
+) => {
+  await ctx.reply('Please select aromas for the perfume:', {
+    reply_markup: getAromaKeyboard(allAromas, selectedAromas),
+  })
+
+  const { message, callbackQuery } = await conversation.wait()
+
+  if (message?.text === 'done') {
+    return
+  }
+
+  const aromaSelection = callbackQuery?.data
+  const selectedAroma = allAromas.find((aroma) => aroma.name === aromaSelection)
+
+  if (selectedAroma) {
+    const existingAromaIndex = selectedAromas.findIndex(
+      (a) => a.name === selectedAroma.name,
+    )
+
+    if (existingAromaIndex !== -1) {
+      // Remove the aroma if it's already selected
+      selectedAromas.splice(existingAromaIndex, 1)
+      await ctx.reply(
+        `Aroma ${selectedAroma.name} removed. You can select more or type 'done' to finish.`,
+      )
+    } else {
+      const noteTypeKeyboard = new InlineKeyboard()
+      noteTypeKeyboard.text('HIGH', 'HIGH').row()
+      noteTypeKeyboard.text('MIDDLE', 'MIDDLE').row()
+      noteTypeKeyboard.text('BASE', 'BASE').row()
+
+      await ctx.reply(`Select note type for aroma ${selectedAroma.name}:`, {
+        reply_markup: noteTypeKeyboard,
+      })
+
+      const { callbackQuery: noteCallback } = await conversation.wait()
+      const noteType = noteCallback?.data as AromaType
+
+      selectedAromas.push({ name: selectedAroma.name, noteType })
+      await ctx.reply(
+        `Aroma ${selectedAroma.name} with note type ${noteType} added. You can select more or type 'done' to finish.`,
+      )
+    }
+
+    if (selectedAromas.length < allAromas.length) {
+      await ctx.reply('Please select aromas for the perfume:', {
+        reply_markup: getAromaKeyboard(allAromas, selectedAromas),
+      })
+    }
+  }
+
+  if (selectedAromas.length < allAromas.length) {
+    await handleAromaSelection(conversation, allAromas, selectedAromas, ctx)
+  }
+}
