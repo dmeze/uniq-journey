@@ -7,6 +7,7 @@ export interface Aroma {
   id: string
   name: string
   noteType: string
+  perfumeId: string
   aroma: { id: string; name: string }
 }
 

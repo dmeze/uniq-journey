@@ -106,8 +106,10 @@ export const updatePerfume = async (
   name: string,
   imageFiles: any[],
   aromas: {
-    name: string
+    aroma: { id: string; name: string }
     noteType: AromaType
+    perfumeId: string
+    aromaId: string
   }[],
 ) => {
   try {
@@ -130,7 +132,12 @@ export const updatePerfume = async (
       }),
     )
 
-    const aromaRecords = await getOrCreateAromas(aromas)
+    const finalAromas = aromas.map(({ aroma, noteType }) => ({
+      name: aroma.name,
+      noteType,
+    }))
+
+    const aromaRecords = await getOrCreateAromas(finalAromas)
 
     await prisma.perfume.update({
       where: { id },
