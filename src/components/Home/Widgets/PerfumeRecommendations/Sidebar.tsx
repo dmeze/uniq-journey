@@ -47,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ perfumes }) => {
         <button
           type="button"
           onClick={toggleCollapse}
-          className="text-gray-600 focus:outline-none"
+          className="text-dark-green focus:outline-none"
         >
           {isCollapsed ? <CaretRight size={24} /> : <CaretLeft size={24} />}
         </button>
@@ -73,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = ({ perfumes }) => {
               className="size-16 rounded-lg object-cover"
             />
             {!isCollapsed && (
-              <p className="text-gray-700 md:block">{perfume.name}</p>
+              <p className="text-dark-green md:block">{perfume.name}</p>
             )}
           </button>
         ))}

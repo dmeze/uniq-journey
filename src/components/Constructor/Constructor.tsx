@@ -19,10 +19,7 @@ const Constructor = ({ aromas }: { aromas: Aroma[] }) => {
   const selectedNotes = [...baseNotes, ...middleNotes, ...topNotes]
 
   return (
-    <div className="flex flex-col p-6 lg:px-10 lg:pt-4">
-      <h1 className="mb-4 text-2xl font-bold text-dark-green-800">
-        Perfume Constructor
-      </h1>
+    <div className="flex flex-col p-6 lg:px-10 lg:pt-12">
       <PerfumeBottle
         baseNotes={baseNotes}
         middleNotes={middleNotes}

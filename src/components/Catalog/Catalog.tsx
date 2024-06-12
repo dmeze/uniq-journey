@@ -47,11 +47,9 @@ const Catalog: React.FC<CatalogProps> = ({
   }
 
   return (
-    <div className="p-6 lg:p-16">
+    <div className="p-6 lg:px-16 lg:py-10">
       <div className="mb-4 flex flex-col">
-        <h1 className="mb-4 text-2xl font-bold text-dark-green-800">
-          Perfume Catalog
-        </h1>
+        <h1 className="mb-4 text-2xl font-bold">Perfume Catalog</h1>
         <div className="flex items-center">
           <AromaDropdown
             aromas={aromas}

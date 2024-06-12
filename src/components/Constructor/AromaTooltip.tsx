@@ -40,8 +40,8 @@ const AromaTooltip = ({
     >
       <FloatingArrow ref={arrowRef} context={context} className="fill-white" />
       <h2 className="text-xl font-bold text-dark-green">{aroma.name}</h2>
-      <p className="mt-2 text-sm text-gray-700">{aroma.description}</p>
-      <p className="mt-2 font-semibold text-gray-800">Select the note:</p>
+      <p className="mt-2 text-sm text-dark-green">{aroma.description}</p>
+      <p className="mt-2 font-semibold text-dark-green">Select the note:</p>
       <div className="mt-4 flex flex-wrap justify-around space-x-2 sm:justify-between sm:space-x-1">
         {noteTypes.map(({ id, label }) => (
           <button

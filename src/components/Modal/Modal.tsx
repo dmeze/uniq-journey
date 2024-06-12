@@ -20,7 +20,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-700 hover:text-gray-900"
+            className="text-dark-green hover:text-light-green-200"
             aria-label="Close"
           >
             <svg

@@ -81,7 +81,7 @@ const FormSteps = ({
           }`}
         >
           {tabName && (
-            <h2 className="my-2 w-full border-b pb-4 text-left text-2xl font-semibold text-gray-800">
+            <h2 className="my-2 w-full border-b pb-4 text-left text-2xl font-semibold text-dark-green">
               {tabName}
             </h2>
           )}

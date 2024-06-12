@@ -75,8 +75,8 @@ const CartItem = ({
         )}
         <div className="grow">
           <h3 className="text-lg font-semibold">{name}</h3>
-          <p className="text-sm text-gray-500">{size}</p>
-          <p className="text-xl font-semibold text-gray-500">
+          <p className="text-sm text-light-green-300">{size}</p>
+          <p className="text-xl font-semibold text-light-green-200">
             ₴{price * quantity}
           </p>
         </div>

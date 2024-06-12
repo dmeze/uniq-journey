@@ -60,13 +60,13 @@ const Card = ({ imageURLs, name, id }: CardProps) => {
           priority
           src={imageURLs[0]}
           alt={name}
-          width={300}
-          height={300}
-          className="size-full rounded-t-lg object-cover object-center"
+          layout="fill"
+          objectFit="cover"
+          className="rounded-t-lg"
         />
       </div>
       <div className="px-6 py-4">
-        <h2 className="mb-2 text-xl font-semibold text-gray-900">{name}</h2>
+        <h2 className="mb-2 text-xl font-bold">{name}</h2>
       </div>
       <div className="flex flex-wrap px-6 pb-2 pt-4">
         {sizeOptions.map((option) => (
@@ -78,7 +78,7 @@ const Card = ({ imageURLs, name, id }: CardProps) => {
         ${
           selectedSize === option
             ? 'bg-light-green-100 text-white shadow-md'
-            : 'bg-gray-100 text-gray-700 hover:bg-light-green-700 hover:text-light-green-300'
+            : 'bg-gray-100 text-dark-green hover:bg-light-green-700 hover:text-light-green-300'
         }
         `}
           >

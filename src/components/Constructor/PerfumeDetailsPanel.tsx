@@ -154,7 +154,7 @@ const PerfumeDetailsPanel = ({
         <button
           type="button"
           onClick={toggleCollapse}
-          className="relative inset-x-0 bottom-0 -mb-3 flex w-full flex-col items-center border-b-2 border-light-green-600 hover:border-dark-green-600"
+          className="relative inset-x-0 bottom-0 -mb-3 flex w-full flex-col items-center border-b-2 border-light-green-600 transition-all duration-500 hover:border-dark-green-600"
         >
           <p
             className={`absolute text-dark-green-600 transition-all duration-500 ${
@@ -189,7 +189,7 @@ const PerfumeDetailsPanel = ({
             className={`my-2 mr-2 rounded-lg px-3 py-1 text-sm font-medium transition-all duration-300 ease-in-out${
               size === option
                 ? ' bg-light-green-100 text-white shadow-md'
-                : ' bg-gray-100 text-gray-700 hover:bg-light-green-700 hover:text-light-green-300'
+                : ' bg-gray-100 text-dark-green hover:bg-light-green-700 hover:text-light-green-300'
             }`}
           >
             {option}

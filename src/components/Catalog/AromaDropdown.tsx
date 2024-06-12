@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Funnel } from 'phosphor-react'
 
 interface AromaDropdownProps {
@@ -57,7 +57,10 @@ const AromaDropdown: React.FC<AromaDropdownProps> = ({
         <div className="absolute left-0 z-50 mt-2 w-64 bg-white shadow-lg">
           <ul className="max-h-[400px] overflow-y-auto">
             {sortedAromas.map((aroma) => (
-              <li key={aroma.name} className="px-4 py-2 hover:bg-gray-100">
+              <li
+                key={aroma.name}
+                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+              >
                 <label
                   htmlFor={aroma.name}
                   className="flex items-center space-x-2"
@@ -72,13 +75,13 @@ const AromaDropdown: React.FC<AromaDropdownProps> = ({
                   <span
                     className={`grow ${
                       selectedAromas.includes(aroma.name)
-                        ? 'font-bold text-dark-green-500'
-                        : 'text-dark-green-700'
+                        ? 'font-bold text-dark-green-200'
+                        : 'text-dark-green-300'
                     }`}
                   >
                     {aroma.name}
                   </span>
-                  <span className="ml-2 text-sm text-gray-600">
+                  <span className="ml-2 text-sm text-dark-green-300">
                     ({aroma.count})
                   </span>
                 </label>
