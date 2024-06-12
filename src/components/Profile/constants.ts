@@ -44,10 +44,8 @@ export const userValidationSchema = Yup.object({
     .required('Email is required.'),
   city: Yup.object({
     label: Yup.string().required('City is required.'),
-    value: Yup.string().required('City is required.'),
   }).required('City is required.'),
   warehouse: Yup.object({
     label: Yup.string().required('Warehouse is required.'),
-    value: Yup.string().required('Warehouse is required.'),
   }).required('Warehouse is required.'),
 })

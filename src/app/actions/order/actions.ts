@@ -12,6 +12,7 @@ import type {
 
 import prisma from '@/app/actions'
 import { clearCart } from '@/app/actions/cart/actions'
+import { FIVE_MIN_CACHE } from '@/constants'
 
 interface OrderPerfume {
   perfumeId?: string
@@ -62,7 +63,7 @@ export const getOrders = async () => {
       },
       user: true,
     },
-    cacheStrategy: { ttl: 1500, swr: 1500 },
+    cacheStrategy: { swr: FIVE_MIN_CACHE },
   })
 }
 
@@ -93,7 +94,7 @@ export const getOrderByUserId = async () => {
         },
       },
     },
-    cacheStrategy: { ttl: 3000, swr: 3000 },
+    cacheStrategy: { swr: 180 },
   })
 }
 

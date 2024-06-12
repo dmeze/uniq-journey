@@ -32,6 +32,7 @@ const PerfumeDetailsPanel = ({
   const [size, setSize] = useState('7ml')
 
   const toggleCollapse = () => {
+    onImageChange(null)
     setIsCollapsed(!isCollapsed)
   }
 

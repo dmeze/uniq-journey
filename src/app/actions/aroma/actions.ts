@@ -2,6 +2,7 @@ import { v4 } from 'uuid'
 
 import type { PerfumeWithAromas } from '@/app/actions/perfume/actions'
 import prisma from '@/app/actions'
+import { ONE_MONTH_CACHE } from '@/constants'
 
 export interface Aroma {
   id: string
@@ -42,7 +43,7 @@ export const getAromasWithCount = async (
   })
 
   const allAromas = await prisma.aroma.findMany({
-    cacheStrategy: { ttl: 60 * 60 * 24 * 7, swr: 6000 },
+    cacheStrategy: { swr: ONE_MONTH_CACHE },
   })
   return allAromas
     .filter((aroma) => aromaCounts[aroma.name])

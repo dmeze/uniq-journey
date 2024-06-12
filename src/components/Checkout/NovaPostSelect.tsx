@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useContext } from 'react'
 import { toast } from 'react-toastify'
 
 import Form from '@/components/Form'
@@ -8,6 +8,7 @@ import {
   mailInformationFields,
   mailInformationValidationSchema,
 } from '@/components/Checkout/constants'
+import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 
 const NovaPostSelect = ({
   cityLabel,
@@ -18,6 +19,7 @@ const NovaPostSelect = ({
   warehouseLabel: string | null
   handleSubmit: (city: string, warehouse: string) => void
 }) => {
+  const { isPending } = useContext(PageLoaderContext)!
   const handleSubmitAction = (data: {
     city: { label: string; value: string }
     warehouse: { value: string; label: string }
@@ -47,6 +49,8 @@ const NovaPostSelect = ({
           city: { value: '', label: cityLabel },
           warehouse: { value: '', label: warehouseLabel },
         }}
+        isDirty
+        isPending={isPending}
         action={handleSubmitAction}
         fields={mailInformationFields}
         validationSchema={mailInformationValidationSchema}

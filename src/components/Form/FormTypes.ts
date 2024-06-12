@@ -18,4 +18,6 @@ export interface IFormProps {
   action: (props: any) => void
   validationSchema: Yup.ObjectSchema<any>
   initialValues: any
+  isPending?: boolean
+  isDirty?: boolean
 }

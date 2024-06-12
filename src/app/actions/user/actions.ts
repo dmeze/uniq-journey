@@ -7,6 +7,7 @@ import { v4 } from 'uuid'
 
 import prisma from '@/app/actions'
 import { migrateCart } from '@/app/actions/cart/actions'
+import { ONE_MONTH_CACHE } from '@/constants'
 
 export interface UserInformationData {
   name: string
@@ -50,7 +51,6 @@ export const getCurrentUser = async () => {
       city: true,
       warehouse: true,
     },
-    cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
   })
 }
 
@@ -62,7 +62,7 @@ export const loginUser = async (loginData: UserLoginData) => {
       where: {
         email: loginData.email,
       },
-      cacheStrategy: { ttl: 60 * 60 * 24, swr: 3000 },
+      cacheStrategy: { swr: ONE_MONTH_CACHE },
     })
 
     if (!user) {
@@ -134,10 +134,10 @@ export const updateUser = async (
       },
     })
 
-    revalidatePath('/')
+    revalidatePath('/profile')
     return { success: true }
   } catch (e) {
-    revalidatePath('/')
+    revalidatePath('/profile')
     return { success: false, message: 'Something went wrong!' }
   }
 }

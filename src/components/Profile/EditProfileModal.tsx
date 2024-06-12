@@ -36,7 +36,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { startTransition } = useContext(PageLoaderContext)!
+  const { startTransition, isPending } = useContext(PageLoaderContext)!
 
   const handleSubmit = async (data: UserUpdatedFormata) => {
     const city = data.city as any
@@ -87,6 +87,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
         }}
         action={handleSubmit}
         fields={userFields}
+        isPending={isPending}
         validationSchema={userValidationSchema}
         submitText="Update User Info"
       />

@@ -3,6 +3,7 @@ import { useFormik } from 'formik'
 import Input from '@/components/Input'
 import type { IFormProps } from '@/components/Form/FormTypes'
 import ActionSelect from '@/components/Select/ActionSelect'
+import ContentLoader from '@/components/Loaders/ContentLoader'
 
 const Form = ({
   action,
@@ -10,6 +11,8 @@ const Form = ({
   submitText,
   validationSchema,
   initialValues,
+  isPending,
+  isDirty,
 }: IFormProps) => {
   const handleSubmit = async (formData: FormData) => {
     action(formData)
@@ -20,6 +23,8 @@ const Form = ({
     validationSchema,
     onSubmit: handleSubmit,
   })
+
+  const isFormDirty = isDirty || formik.dirty
 
   return (
     <form className="mx-auto max-w-lg" onSubmit={formik.handleSubmit}>
@@ -57,18 +62,23 @@ const Form = ({
       )}
       <button
         className="
-          mt-4 w-full
-          rounded bg-dark-green-300
-          px-4 py-2 font-bold text-white
-          transition
-          duration-300 ease-in-out
-          hover:bg-dark-green-600 focus:outline-none
+          mt-4 flex
+          h-12
+          w-full items-center
+          justify-center rounded bg-dark-green-300
+          px-4
+          py-2 font-bold text-white
+          transition duration-300
+          ease-in-out hover:bg-dark-green-600
+          focus:outline-none
           disabled:bg-light-green-500
           "
-        disabled={!formik.isValid || !formik.dirty}
+        disabled={
+          isPending || formik.isSubmitting || !formik.isValid || !isFormDirty
+        }
         type="submit"
       >
-        {submitText}
+        {isPending || formik.isSubmitting ? <ContentLoader /> : submitText}
       </button>
     </form>
   )
