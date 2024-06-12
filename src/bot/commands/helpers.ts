@@ -46,6 +46,7 @@ export const getAromaKeyboard = (
     const buttonText = isSelected ? `${aroma.name} ✅` : aroma.name
     aromaKeyboard.text(buttonText, aroma.name).row()
   })
+  aromaKeyboard.text('Submit Selections', 'submit_selections').row()
   return aromaKeyboard
 }
 
@@ -59,31 +60,30 @@ export const handleAromaSelection = async (
     reply_markup: getAromaKeyboard(allAromas, selectedAromas),
   })
 
-  const { message, callbackQuery } = await conversation.wait()
+  const { callbackQuery } = await conversation.wait()
 
-  if (message?.text === 'done') {
+  const aromaSelection = callbackQuery?.data
+  if (aromaSelection === 'submit_selections') {
     return
   }
 
-  const aromaSelection = callbackQuery?.data
   const selectedAroma = allAromas.find((aroma) => aroma.name === aromaSelection)
-
   if (selectedAroma) {
     const existingAromaIndex = selectedAromas.findIndex(
       (a) => a.name === selectedAroma.name,
     )
 
     if (existingAromaIndex !== -1) {
-      // Remove the aroma if it's already selected
       selectedAromas.splice(existingAromaIndex, 1)
-      await ctx.reply(
-        `Aroma ${selectedAroma.name} removed. You can select more or type 'done' to finish.`,
-      )
+      await ctx.reply(`Aroma ${selectedAroma.name} removed.`)
     } else {
       const noteTypeKeyboard = new InlineKeyboard()
-      noteTypeKeyboard.text('HIGH', 'HIGH').row()
-      noteTypeKeyboard.text('MIDDLE', 'MIDDLE').row()
-      noteTypeKeyboard.text('BASE', 'BASE').row()
+        .text('HIGH', 'HIGH')
+        .row()
+        .text('MIDDLE', 'MIDDLE')
+        .row()
+        .text('BASE', 'BASE')
+        .row()
 
       await ctx.reply(`Select note type for aroma ${selectedAroma.name}:`, {
         reply_markup: noteTypeKeyboard,
@@ -94,18 +94,10 @@ export const handleAromaSelection = async (
 
       selectedAromas.push({ name: selectedAroma.name, noteType })
       await ctx.reply(
-        `Aroma ${selectedAroma.name} with note type ${noteType} added. You can select more or type 'done' to finish.`,
+        `Aroma ${selectedAroma.name} with note type ${noteType} added. You can select more or proceed.`,
       )
     }
-
-    if (selectedAromas.length < allAromas.length) {
-      await ctx.reply('Please select aromas for the perfume:', {
-        reply_markup: getAromaKeyboard(allAromas, selectedAromas),
-      })
-    }
   }
 
-  if (selectedAromas.length < allAromas.length) {
-    await handleAromaSelection(conversation, allAromas, selectedAromas, ctx)
-  }
+  handleAromaSelection(conversation, allAromas, selectedAromas, ctx)
 }
