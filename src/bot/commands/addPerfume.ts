@@ -32,9 +32,7 @@ export const addPerfumeConversation = async (
   const imageFiles = await conversation.external(async () =>
     Promise.all(
       fileIds.map(async (fileId: string) => {
-        const file = await conversation.external(
-          async () => await ctx.api.getFile(fileId),
-        )
+        const file = await ctx.api.getFile(fileId)
         const downloadUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`
         return downloadFile(downloadUrl, conversation)
       }),
