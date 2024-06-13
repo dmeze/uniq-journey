@@ -15,7 +15,7 @@ const MainWidget = () => {
         sizes="100vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 bottom-40 left-4 flex items-center justify-center">
+      <div className="absolute inset-0 bottom-40 flex items-center justify-center md:left-4">
         <button
           type="submit"
           onClick={() => router.push('/catalog')}

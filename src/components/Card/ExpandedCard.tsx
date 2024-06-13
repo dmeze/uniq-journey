@@ -51,7 +51,7 @@ const ExpandedCard = ({
       >
         <motion.div
           layoutId={`card-container-${id}`}
-          className="relative flex w-full max-w-3xl flex-col items-center rounded-lg bg-white p-4 sm:p-6"
+          className="relative flex size-full max-w-3xl flex-col items-center rounded-lg bg-white p-4 sm:p-6"
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
           exit={{ scale: 0.95 }}
