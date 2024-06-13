@@ -9,27 +9,25 @@ import {
   useFloating,
   useInteractions,
 } from '@floating-ui/react'
+import { useTranslations } from 'next-intl'
 
 import { isDarkColor } from './helpers'
 import AromaTooltip from './AromaTooltip'
 
 interface AromaButtonProps {
-  name: string
+  aromaName: string
   isSelected: boolean
   labels: string[]
   color: string
-  description: string
-  onSelectNoteType: (aromaName: string, noteType: string) => void
 }
 
 const AromaButton = ({
-  name,
+  aromaName,
   isSelected,
   labels,
   color,
-  description,
-  onSelectNoteType,
 }: AromaButtonProps) => {
+  const t = useTranslations('Aroma')
   const arrowRef = useRef(null)
   const [isOpen, setIsOpen] = React.useState(false)
   const { floatingStyles, refs, context } = useFloating({
@@ -64,7 +62,7 @@ const AromaButton = ({
           color: isSelected && isDarkColor(color) ? 'white' : '#074C51',
         }}
       >
-        {name}
+        {t(`title.${aromaName}`)}
         {labels.length > 0 && (
           <span className="absolute right-0 top-0 -mr-2 -mt-2 flex space-x-1">
             {labels.map((label) => (
@@ -80,8 +78,7 @@ const AromaButton = ({
       </button>
       {isOpen && (
         <AromaTooltip
-          aroma={{ name, description }}
-          onSelectNoteType={onSelectNoteType}
+          aromaName={aromaName}
           floatingStyles={floatingStyles}
           getFloatingProps={getFloatingProps}
           setFloating={refs.setFloating}

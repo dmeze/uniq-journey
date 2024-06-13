@@ -1,11 +1,7 @@
-import React, { useContext } from 'react'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import React from 'react'
 import type { Aroma } from '@prisma/client'
-import { toast } from 'react-toastify'
-import { useTranslations } from 'next-intl'
 
 import { getColorMap, getLabels } from '@/components/Constructor/helpers'
-import { PageLoaderContext } from '@/providers/PageLoaderProvider'
 
 import AromaButton from './AromaButton'
 
@@ -24,46 +20,7 @@ const AromaSelectionPanel = ({
   middleNotes,
   topNotes,
 }: AromaSelectionPanelProps) => {
-  const pathname = usePathname()
-  const router = useRouter()
-  const t = useTranslations('Aroma')
-  const searchParams = useSearchParams()
-  const { startTransition } = useContext(PageLoaderContext)!
-
   const colorMap = getColorMap(baseNotes, middleNotes, topNotes)
-
-  const handleSelectNoteType = (aromaName: string, noteType: string) => {
-    startTransition(async () => {
-      const params = new URLSearchParams(searchParams)
-      const currentAromas = new Set(params.get(noteType)?.split(',') || [])
-
-      if (currentAromas.has(aromaName)) {
-        currentAromas.delete(aromaName)
-      } else if (currentAromas.size < 3) {
-        currentAromas.add(aromaName)
-      } else {
-        toast.info('You can add up to 3 aroma oils in one note.')
-        return
-      }
-
-      const updatedAromas = Array.from(currentAromas).join(',')
-      let isAdd = true
-
-      if (updatedAromas) {
-        params.set(noteType, updatedAromas)
-      } else {
-        params.delete(noteType)
-        isAdd = false
-      }
-
-      router.push(`${pathname}?${params.toString()}`)
-      toast.success(
-        isAdd
-          ? `Successfully added ${aromaName} to the ${noteType}`
-          : `Successfully removed ${aromaName} from the ${noteType}`,
-      )
-    })
-  }
 
   return (
     <div className="h-full flex-1 rounded-lg border border-gray-300 p-4">
@@ -76,12 +33,10 @@ const AromaSelectionPanel = ({
           return (
             <AromaButton
               key={name}
-              name={t(`title.${name}`)}
-              description={t(`description.${name}`)}
+              aromaName={name}
               isSelected={isSelected}
               labels={labels}
               color={color}
-              onSelectNoteType={handleSelectNoteType}
             />
           )
         })}

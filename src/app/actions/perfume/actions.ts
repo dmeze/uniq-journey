@@ -232,12 +232,6 @@ export const getBestSellers = async (limit: number = 10) => {
 
       if (!perfume) return null
 
-      const formattedAromas = perfume.aromas.map(({ aroma, noteType }) => ({
-        id: aroma.id,
-        name: aroma.name,
-        noteType,
-      }))
-
       const orderCount =
         // eslint-disable-next-line no-underscore-dangle
         orderCounts.find((countItem) => countItem.perfumeId === perfumeId)
@@ -247,7 +241,7 @@ export const getBestSellers = async (limit: number = 10) => {
         id: perfumeId,
         name: perfume.name,
         imageURLs: perfume.imageURLs,
-        aromas: formattedAromas,
+        aromas: perfume.aromas,
         orderCount,
       }
     })
@@ -290,18 +284,11 @@ export const getRecentPerfumes = async (limit: number = 10) => {
 
         if (!perfume) return null
 
-        const formattedAromas =
-          perfume.aromas?.map(({ aroma, noteType }) => ({
-            id: aroma.id,
-            name: aroma.name,
-            noteType,
-          })) || []
-
         return {
           id: perfume.id,
           name: perfume.name,
           imageURLs: perfume.imageURLs,
-          aromas: formattedAromas,
+          aromas: perfume.aromas,
           orderDate: order.createDate,
           price: orderItem.price,
         }
@@ -313,11 +300,7 @@ export const getRecentPerfumes = async (limit: number = 10) => {
     id: string
     name: string
     imageURLs: string[]
-    aromas: {
-      id: string
-      name: string
-      noteType: string
-    }[]
+    aromas: PerfumeAromaWithAroma[]
     orderDate: Date
     price: number
   }[]

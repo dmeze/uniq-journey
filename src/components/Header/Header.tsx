@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { MagnifyingGlass, ShoppingCart, User, List } from 'phosphor-react'
+import { List, MagnifyingGlass, ShoppingCart, User } from 'phosphor-react'
 
 import { navs, PROFILE_PAGE } from '@/components/Header/constants'
 import { create } from '@/app/actions/actions'
@@ -78,7 +78,7 @@ const Header = ({ user }: { user: UserProfileProps }) => {
           >
             <List size={26} weight="bold" />
           </button>
-          <div className="hidden h-full items-center space-x-1 lg:flex xl:ml-72">
+          <div className="hidden h-full items-center space-x-1 lg:flex xl:ml-48">
             <div className="flex h-full w-10 cursor-pointer items-center justify-center hover:text-dark-green-300">
               <MagnifyingGlass size={26} weight="bold" />
             </div>

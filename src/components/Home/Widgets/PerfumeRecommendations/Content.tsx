@@ -3,6 +3,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { isEmpty } from 'lodash'
 import { useTranslations } from 'next-intl'
+import type { AromaType } from '@prisma/client'
 
 import Card from '@/components/Card'
 import DescriptionCard from '@/components/Card/DescriptionCard'
@@ -18,6 +19,13 @@ interface ContentProps {
   filteredPerfumes: Perfume[]
   currentPerfume: Perfume
   similarCounts: Record<string, number>
+}
+
+interface Aroma {
+  aromaId: string
+  name: string
+  aroma: { id: string; name: string }
+  noteType: AromaType
 }
 
 const Content: React.FC<ContentProps> = ({
@@ -94,6 +102,8 @@ const Content: React.FC<ContentProps> = ({
                     key={perfume.id}
                     id={perfume.id}
                     name={perfume.name}
+                    description={t(`description.${currentPerfume.name}`)}
+                    aromas={perfume.aromas as unknown as Aroma[]}
                     imageURLs={perfume.imageURLs}
                   />
                 ))

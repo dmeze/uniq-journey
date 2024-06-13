@@ -14,6 +14,7 @@ import { getCurrentUser } from '@/app/actions/user/actions'
 import PerfumeRecommendations from '@/components/Home/Widgets/PerfumeRecommendations/PerfumeRecommendations'
 import type { Perfume } from '@/app/actions/aroma/actions'
 import PageLoader from '@/components/Loaders/PageLoader'
+import MainWidget from '@/components/Home/Widgets/MainWidget'
 
 const Home = async ({
   searchParams,
@@ -27,20 +28,23 @@ const Home = async ({
     (await getUserMostOrderedPerfumes()) as unknown as Perfume[]
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col">
-        <BestSellers perfumes={bestSellers} />
-        {user?.name && (
-          <>
-            <RecentPerfumes recentPerfumes={recentPerfumes} />
-            <Suspense fallback={<PageLoader size="50px" />}>
-              <PerfumeRecommendations
-                searchParams={searchParams}
-                perfumes={userMostOrderedPerfumes}
-              />
-            </Suspense>
-          </>
-        )}
+    <div>
+      <MainWidget />
+      <div className="container mx-auto px-4 pb-8">
+        <div className="flex flex-col">
+          <BestSellers perfumes={bestSellers} />
+          {user?.name && (
+            <>
+              <RecentPerfumes recentPerfumes={recentPerfumes} />
+              <Suspense fallback={<PageLoader size="50px" />}>
+                <PerfumeRecommendations
+                  searchParams={searchParams}
+                  perfumes={userMostOrderedPerfumes}
+                />
+              </Suspense>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

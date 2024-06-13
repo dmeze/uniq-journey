@@ -37,9 +37,9 @@ const DescriptionCard = ({
           <Image
             src={imageURLs[0]}
             alt={name}
-            layout="fill"
-            objectFit="cover"
-            className="rounded-lg shadow-lg"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="rounded-lg object-cover shadow-lg"
           />
         </div>
         <div className="mt-4">

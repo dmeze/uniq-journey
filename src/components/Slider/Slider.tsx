@@ -1,14 +1,23 @@
 'use client'
 
 import * as React from 'react'
-import SlickSlider from 'react-slick'
 import { Fragment } from 'react'
-import { ArrowRight, ArrowLeft } from 'phosphor-react'
+import SlickSlider from 'react-slick'
+import { ArrowLeft, ArrowRight } from 'phosphor-react'
+import { useTranslations } from 'next-intl'
+import type { AromaType } from '@prisma/client'
 
 import Card from '@/components/Card'
 
 import 'slick-carousel/slick/slick-theme.css'
 import 'slick-carousel/slick/slick.css'
+
+interface Aroma {
+  aromaId: string
+  name: string
+  aroma: { id: string; name: string }
+  noteType: AromaType
+}
 
 interface SliderProps {
   items: {
@@ -16,10 +25,12 @@ interface SliderProps {
     imageURLs: string[]
     name: string
     price?: number
+    aromas?: Aroma[]
   }[]
 }
 
 const Slider: React.FC<SliderProps> = ({ items }) => {
+  const tPerfume = useTranslations('Perfume')
   const sliderRef = React.useRef<SlickSlider>(null)
 
   return (
@@ -59,7 +70,12 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
         >
           {items.map((item) => (
             <Fragment key={item.id}>
-              <Card {...item} />
+              <Card
+                description={tPerfume(`description.${item.name}`)}
+                {...item}
+                aromas={item.aromas as unknown as Aroma[]}
+                withoutId
+              />
             </Fragment>
           ))}
         </SlickSlider>

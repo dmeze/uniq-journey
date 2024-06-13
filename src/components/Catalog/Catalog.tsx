@@ -4,6 +4,7 @@ import React, { useContext } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { X } from 'phosphor-react'
 import { useTranslations } from 'next-intl'
+import type { AromaType } from '@prisma/client'
 
 import Card from '@/components/Card'
 import type { AromaWithCount } from '@/app/actions/aroma/actions'
@@ -17,6 +18,13 @@ interface CatalogProps {
   aromas: AromaWithCount[]
 }
 
+interface Aroma {
+  aromaId: string
+  name: string
+  aroma: { id: string; name: string }
+  noteType: AromaType
+}
+
 const Catalog: React.FC<CatalogProps> = ({
   aromasFilter,
   perfumes,
@@ -24,7 +32,8 @@ const Catalog: React.FC<CatalogProps> = ({
 }) => {
   const pathname = usePathname()
   const router = useRouter()
-  const t = useTranslations('Aroma')
+  const tAroma = useTranslations('Aroma')
+  const tPerfume = useTranslations('Perfume')
   const { startTransition, isPending } = useContext(PageLoaderContext)!
 
   const toggleAroma = (aroma: string) => {
@@ -65,7 +74,7 @@ const Catalog: React.FC<CatalogProps> = ({
                 key={aroma}
                 className="m-1 flex items-center rounded-full bg-light-green-100 px-3 py-1 text-sm font-medium text-white"
               >
-                {t(`title.${aroma}`)}
+                {tAroma(`title.${aroma}`)}
                 <button
                   disabled={isPending}
                   type="button"
@@ -86,7 +95,11 @@ const Catalog: React.FC<CatalogProps> = ({
             key={perfume.id}
             className="w-full min-w-80 sm:w-1/2 md:w-1/3 lg:w-1/4"
           >
-            <Card {...perfume} />
+            <Card
+              description={tPerfume(`description.${perfume.name}`)}
+              {...perfume}
+              aromas={perfume.aromas as unknown as Aroma[]}
+            />
           </div>
         ))}
       </div>
