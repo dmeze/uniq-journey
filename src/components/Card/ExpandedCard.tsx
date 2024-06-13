@@ -70,7 +70,7 @@ const ExpandedCard = ({
           <motion.div
             key={selectedImage || 'empty'}
             layoutId={`card-image-${id}`}
-            className="relative h-64 w-2/3 sm:h-96"
+            className="relative h-40 w-2/3 sm:h-96"
             initial={{ y: 10, opacity: 0, scale: 0.95 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: -10, opacity: 0, scale: 0.95 }}
@@ -80,7 +80,7 @@ const ExpandedCard = ({
               src={selectedImage}
               alt={name}
               fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 30vw"
               className="rounded-t-lg object-cover"
             />
           </motion.div>
