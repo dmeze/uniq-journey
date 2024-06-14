@@ -38,9 +38,9 @@ const Header = ({ user }: { user: UserProfileProps }) => {
 
   return (
     <header className="bg-white-yellow shadow-md">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 xl:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="hidden space-x-8 lg:flex">
+          <div className="hidden space-x-8 xl:flex">
             {navs.map(({ title, href }) => (
               <Link
                 href={href}
@@ -73,12 +73,12 @@ const Header = ({ user }: { user: UserProfileProps }) => {
           <button
             type="button"
             aria-label="Toggle Navigation"
-            className="flex items-center justify-center rounded-md p-2 text-dark-green hover:text-light-green-200 focus:outline-none lg:hidden"
+            className="flex items-center justify-center rounded-md p-2 text-dark-green hover:text-light-green-200 focus:outline-none xl:hidden"
             onClick={() => setIsNavOpen(!isNavOpen)}
           >
             <List size={26} weight="bold" />
           </button>
-          <div className="hidden h-full items-center space-x-1 lg:flex xl:ml-48">
+          <div className="hidden h-full items-center space-x-1 xl:ml-[20.5rem] xl:flex">
             <div className="flex h-full w-10 cursor-pointer items-center justify-center hover:text-dark-green-300">
               <MagnifyingGlass size={26} weight="bold" />
             </div>
@@ -95,7 +95,7 @@ const Header = ({ user }: { user: UserProfileProps }) => {
                 <User size={26} weight="bold" />
                 {user?.name}
               </p>
-              <div className="absolute top-[57px] mt-2 hidden rounded-lg rounded-t-none bg-white-yellow shadow-lg group-hover:block group-hover:scale-105">
+              <div className="absolute top-[57px] z-10 mt-2 hidden rounded-lg rounded-t-none bg-white-yellow shadow-lg group-hover:block group-hover:scale-105">
                 {user?.name ? (
                   <>
                     <Link
@@ -128,7 +128,7 @@ const Header = ({ user }: { user: UserProfileProps }) => {
         </div>
         {isNavOpen && (
           <>
-            <div className="mt-2 flex flex-col space-y-1 lg:hidden">
+            <div className="mt-2 flex flex-col space-y-1 xl:hidden">
               {navs.map(({ title, href }) => (
                 <Link
                   key={title}
@@ -140,7 +140,7 @@ const Header = ({ user }: { user: UserProfileProps }) => {
                 </Link>
               ))}
             </div>
-            <div className="mt-2 flex items-center justify-around space-x-1 lg:hidden">
+            <div className="mt-2 flex items-center justify-around space-x-1 xl:hidden">
               <div className="flex h-full w-10 cursor-pointer items-center justify-center hover:text-dark-green-300">
                 <MagnifyingGlass size={26} weight="bold" />
               </div>
@@ -157,7 +157,7 @@ const Header = ({ user }: { user: UserProfileProps }) => {
                   <User size={26} weight="bold" />
                   {user?.name}
                 </p>
-                <div className="absolute top-[34px] mt-2 hidden rounded-lg rounded-t-none bg-white-yellow shadow-lg group-hover:block md:top-[57px]">
+                <div className="absolute top-[34px] z-10 mt-2 hidden rounded-lg rounded-t-none bg-white-yellow shadow-lg group-hover:block md:top-[18px]">
                   {user?.name ? (
                     <>
                       <Link

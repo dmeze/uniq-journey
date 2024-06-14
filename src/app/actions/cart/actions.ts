@@ -5,7 +5,6 @@ import { revalidatePath } from 'next/cache'
 import { v4 } from 'uuid'
 
 import prisma from '@/app/actions'
-import { ONE_MONTH_CACHE } from '@/constants'
 
 export const getCart = async () => {
   const userIdCookie = cookies().get('uuid')
@@ -70,7 +69,6 @@ export const createCart = async (id: string) => {
     where: {
       id: userIdCookie?.value,
     },
-    cacheStrategy: { swr: ONE_MONTH_CACHE },
   })
 
   if (!user) {
@@ -240,7 +238,6 @@ export const createOrAdd = async (data: {
     where: {
       userId: userIdCookie?.value,
     },
-    cacheStrategy: { swr: ONE_MONTH_CACHE },
   })
 
   if (!cart) {

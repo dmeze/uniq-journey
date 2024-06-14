@@ -150,14 +150,15 @@ export const editPerfumeDetails = async (
     const fileIds: string[] = []
     await handlePhotoUpload(conversation, ctx, fileIds)
 
-    perfume.imageURLs = await Promise.all(
+    const newImageURLs = await Promise.all(
       fileIds.map(async (fileId: string) => {
         const file = await ctx.api.getFile(fileId)
         const downloadUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`
-
         return downloadFile(downloadUrl)
       }),
     )
+
+    perfume.imageURLs = [...perfume.imageURLs, ...newImageURLs]
   }
 
   if (editCallback?.data === 'remove_photos') {

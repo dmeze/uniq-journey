@@ -13,7 +13,7 @@ const Checkout = async () => {
           <UserInformation />
           <section className="flex flex-col rounded-lg bg-white p-6 shadow-lg">
             <h2 className="text-2xl font-semibold">Your Cart</h2>
-            <div className="relative mt-4 flex flex-1 flex-col border-t pt-4">
+            <div className="relative mt-4 flex max-h-[435px] flex-1 flex-col border-t pt-4">
               <CheckoutInformation />
             </div>
           </section>

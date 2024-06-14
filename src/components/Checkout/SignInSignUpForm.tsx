@@ -46,7 +46,7 @@ const SignInSignUpForm = ({
           : await loginUser(finalData as UserLoginData)
 
       if (!success) {
-        toast.error(message)
+        toast.error(message, { autoClose: 10000 })
       }
 
       if (submitAction) submitAction()

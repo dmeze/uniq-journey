@@ -119,18 +119,23 @@ export const updatePerfume = async (
       return { success: false, message: 'Perfume not found' }
     }
 
-    const imageUrls = await Promise.all(
-      imageFiles.map(async (image, index) => {
-        const { url } = await put(
-          `images/perfumes/${name}/${name}_${index}`,
-          image,
-          {
-            access: 'public',
-          },
-        )
-        return url
-      }),
-    )
+    let imageUrls = existingPerfume.imageURLs
+
+    if (!imageFiles.some((file) => typeof file === 'string')) {
+      const newImageUrls = await Promise.all(
+        imageFiles.map(async (image, index) => {
+          const { url } = await put(
+            `images/perfumes/${name}/${name}_${index}`,
+            image,
+            {
+              access: 'public',
+            },
+          )
+          return url
+        }),
+      )
+      imageUrls = [...imageUrls, ...newImageUrls]
+    }
 
     const finalAromas = aromas.map(({ aroma, noteType }) => ({
       name: aroma.name,
@@ -185,7 +190,6 @@ export const filterPerfumes = async (aromas: string) => {
         },
       },
     },
-    cacheStrategy: { ttl: ONE_MONTH_CACHE },
   })
 }
 
