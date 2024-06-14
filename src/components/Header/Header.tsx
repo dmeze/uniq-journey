@@ -78,7 +78,9 @@ const Header = ({ user }: { user: UserProfileProps }) => {
           >
             <List size={26} weight="bold" />
           </button>
-          <div className="hidden h-full items-center space-x-1 xl:ml-[20.5rem] xl:flex">
+          <div
+            className={`hidden h-full items-center space-x-1 ${user?.name ? 'xl:ml-[12rem]' : 'xl:ml-[20.5rem]'} xl:flex`}
+          >
             <div className="flex h-full w-10 cursor-pointer items-center justify-center hover:text-dark-green-300">
               <MagnifyingGlass size={26} weight="bold" />
             </div>
