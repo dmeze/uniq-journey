@@ -6,11 +6,6 @@ import { v4 } from 'uuid'
 import { put } from '@vercel/blob'
 
 import prisma from '@/app/actions'
-import { ONE_DAY_CACHE, ONE_MONTH_CACHE } from '@/constants'
-
-export const getUserPerfumes = async () => {
-  return prisma.userPerfume.findMany()
-}
 
 export const createUserPerfume = async ({
   size,
@@ -23,7 +18,7 @@ export const createUserPerfume = async ({
   aromas: { baseNotes: string[]; middleNotes: string[]; topNotes: string[] }
   name?: string
   description?: string
-  image?: File
+  image?: string
 }) => {
   try {
     const userIdCookie = cookies().get('uuid')?.value
@@ -32,7 +27,6 @@ export const createUserPerfume = async ({
 
     let user = await prisma.user.findUnique({
       where: { id: userId },
-      cacheStrategy: { swr: ONE_DAY_CACHE },
     })
 
     if (!user) {
@@ -47,9 +41,10 @@ export const createUserPerfume = async ({
 
     let imageUrl = ''
     if (image) {
+      const imageFile = JSON.parse(image)
       const { url } = await put(
-        `images/userPerfumes/${userId}/${image.name}`,
-        image,
+        `images/userPerfumes/${userId}/${imageFile.name}`,
+        imageFile,
         {
           access: 'public',
         },
@@ -66,7 +61,6 @@ export const createUserPerfume = async ({
 
     const aromaRecords = await prisma.aroma.findMany({
       where: { name: { in: aromaNames } },
-      cacheStrategy: { swr: ONE_MONTH_CACHE },
     })
 
     const aromaMap = new Map(
@@ -106,5 +100,27 @@ export const createUserPerfume = async ({
     return { success: true, userPerfume }
   } catch (e) {
     return { success: false, message: 'Something went wrong!' }
+  }
+}
+
+export const createUserPerfumeFile = async (formData: FormData) => {
+  try {
+    const imageFile = formData.get('image') as File
+    if (!imageFile) {
+      throw new Error('No image file provided')
+    }
+
+    const userId = formData.get('userId') as string
+    const { url } = await put(
+      `images/userPerfumes/${userId}/${imageFile.name}`,
+      imageFile,
+      {
+        access: 'public',
+      },
+    )
+
+    return { success: true, url }
+  } catch (e) {
+    return { success: false, message: "Can't save your image!" }
   }
 }

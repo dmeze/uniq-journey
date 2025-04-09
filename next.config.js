@@ -5,6 +5,9 @@ module.exports = withNextIntl({
   reactStrictMode: false,
   experimental: {
     serverComponentsExternalPackages: ['grammy'],
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
   },
   images: {
     remotePatterns: [

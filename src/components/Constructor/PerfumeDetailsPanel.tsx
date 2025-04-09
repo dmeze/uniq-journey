@@ -7,16 +7,12 @@ import { useFormik } from 'formik'
 
 import Input from '@/components/Input'
 import ImageInput from '@/components/Input/ImageInput'
+import { sizeOptions, userPerfumePriceBySize } from '@/components/Card/constants'
 import {
-  sizeOptions,
-  userPerfumePriceBySize,
-} from '@/components/Card/constants'
-import {
-  imageValidationSchema,
   nameDescriptionValidationSchema,
-  perfumeDetailsFields,
+  perfumeDetailsFields
 } from '@/components/Constructor/constants'
-import { createUserPerfume } from '@/app/actions/userPerfume/actions'
+import { createUserPerfume, createUserPerfumeFile } from '@/app/actions/userPerfume/actions'
 import { createOrAdd } from '@/app/actions/cart/actions'
 import { setIsCartOpened } from '@/features/cart/cartSlice'
 
@@ -107,37 +103,21 @@ const PerfumeDetailsPanel = ({
     initialValues: {
       name: '',
       description: '',
-      image: null,
     },
-    validationSchema: isCollapsed
-      ? imageValidationSchema
-      : nameDescriptionValidationSchema,
+    validationSchema: nameDescriptionValidationSchema,
     onSubmit: handleSubmit,
   })
 
   return (
-    <form
-      className="flex h-full flex-col rounded-lg border border-gray-300 p-4"
-      onSubmit={formik.handleSubmit}
-    >
+    <div className="flex h-full flex-col rounded-lg border border-gray-300 p-4">
       <h2 className="mb-4 text-xl font-semibold">Perfume Details</h2>
-      <div
-        className={`transition duration-500 ${
-          isCollapsed
-            ? 'relative translate-y-0 opacity-100'
-            : 'invisible absolute translate-y-full opacity-0'
-        }`}
-      >
-        {isCollapsed && (
-          <ImageInput id="image" label="Image" onImageChange={onImageChange} />
-        )}
-      </div>
-      <div
+      <form
         className={`transition duration-500 ${
           isCollapsed
             ? 'invisible absolute translate-y-full opacity-0'
             : 'relative translate-y-0 opacity-100'
         }`}
+        onSubmit={formik.handleSubmit}
       >
         {!isCollapsed &&
           perfumeDetailsFields.map((field) => (
@@ -149,6 +129,79 @@ const PerfumeDetailsPanel = ({
               formik={formik}
             />
           ))}
+        <div className="flex flex-wrap pb-2 pt-4">
+          {sizeOptions.map((option) => (
+            <button
+              type="button"
+              key={option}
+              onClick={() => setSize(option)}
+              className={`my-2 mr-2 rounded-lg px-3 py-1 text-sm font-medium transition-all duration-300 ease-in-out${
+                size === option
+                  ? ' bg-light-green-100 text-white shadow-md'
+                  : ' bg-gray-100 text-dark-green hover:bg-light-green-700 hover:text-light-green-300'
+              }`}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+        <button
+          type="submit"
+          className="ml-auto rounded bg-light-green px-4 py-2 text-white hover:bg-dark-green"
+        >
+          Create
+        </button>
+      </form>
+      <div
+        className={`transition duration-500 ${
+          isCollapsed
+            ? 'relative translate-y-0 opacity-100'
+            : 'invisible absolute translate-y-full opacity-0'
+        }`}
+      >
+        {isCollapsed && (
+          <form action={createUserPerfumeFile}>
+            <ImageInput
+              id="image"
+              label="Image"
+              onImageChange={onImageChange}
+            />
+            <div className="flex flex-wrap pb-2 pt-4">
+              {sizeOptions.map((option) => (
+                <button
+                  type="button"
+                  key={option}
+                  onClick={() => setSize(option)}
+                  className={`my-2 mr-2 rounded-lg px-3 py-1 text-sm font-medium transition-all duration-300 ease-in-out${
+                    size === option
+                      ? ' bg-light-green-100 text-white shadow-md'
+                      : ' bg-gray-100 text-dark-green hover:bg-light-green-700 hover:text-light-green-300'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+            <input
+              name="size"
+              value={size}
+              onChange={() => {}}
+              className="hidden"
+            />
+            <input
+              name="aromas"
+              value={JSON.stringify(aromas)}
+              onChange={() => {}}
+              className="hidden"
+            />
+            <button
+              type="submit"
+              className="ml-auto rounded bg-light-green px-4 py-2 text-white hover:bg-dark-green"
+            >
+              Create
+            </button>
+          </form>
+        )}
       </div>
       <div className="relative my-4">
         <button
@@ -180,29 +233,7 @@ const PerfumeDetailsPanel = ({
           )}
         </button>
       </div>
-      <div className="flex flex-wrap pb-2 pt-4">
-        {sizeOptions.map((option) => (
-          <button
-            type="button"
-            key={option}
-            onClick={() => setSize(option)}
-            className={`my-2 mr-2 rounded-lg px-3 py-1 text-sm font-medium transition-all duration-300 ease-in-out${
-              size === option
-                ? ' bg-light-green-100 text-white shadow-md'
-                : ' bg-gray-100 text-dark-green hover:bg-light-green-700 hover:text-light-green-300'
-            }`}
-          >
-            {option}
-          </button>
-        ))}
-      </div>
-      <button
-        type="submit"
-        className="ml-auto rounded bg-light-green px-4 py-2 text-white hover:bg-dark-green"
-      >
-        Create
-      </button>
-    </form>
+    </div>
   )
 }
 

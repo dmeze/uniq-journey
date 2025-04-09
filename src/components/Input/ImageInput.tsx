@@ -1,16 +1,23 @@
+import type { FormikProps } from 'formik'
+
 interface ImageInputProps {
   id: string
   label: string
   onImageChange: (image: string | null) => void
+  formik?: FormikProps<any>
 }
 
-const ImageInput = ({ id, label, onImageChange }: ImageInputProps) => {
+const ImageInput = ({ id, label, onImageChange, formik }: ImageInputProps) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader()
       reader.onload = () => {
         const imageUrl = reader.result as string
         onImageChange(imageUrl)
+        formik?.setFieldValue(
+          'image',
+          JSON.stringify(e.target.files ? e.target.files[0] : {}),
+        )
       }
       reader.readAsDataURL(e.target.files[0])
     }
